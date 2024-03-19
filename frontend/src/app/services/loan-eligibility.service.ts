@@ -16,10 +16,16 @@ export class LoanEligibilityService {
     return this.http.post(this.backendUrl, applicationData);
   }
   
-  // Remember to replace applicationId with the actual ID you use to reference loan applications.
-  getEligibilityResults(applicationId: string): Observable<any> {
-    const url = `${this.resultsUrl}/${applicationId}`;
+  // Temporarily remove applicationId parameter
+  getEligibilityResults(): Observable<any> {
+    // Temporarily use a fixed URL without applicationId
+    const url = `${this.backendUrl}/eligibility-results`; // Adjusted URL
     return this.http.get(url);
   }
+  // Remember to replace applicationId with the actual ID you use to reference loan applications.
+  //getEligibilityResults(applicationId: string): Observable<any> {
+    //const url = `${this.resultsUrl}/${applicationId}`;
+    //return this.http.get(url);
+  //}
   
 }
