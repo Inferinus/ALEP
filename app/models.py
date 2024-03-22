@@ -9,8 +9,8 @@ import json
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://db_admin:alep2024@localhost/alepdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-RFclassifier = load('models/random_forest_model.joblib')
-scaler = load('models/scaler.joblib')  # Load the scaler if you used one
+RFclassifier = load('app/models/random_forest_model.joblib')
+scaler = load('app/models/scaler.joblib')
 
 
 # Database Models

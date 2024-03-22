@@ -9,35 +9,37 @@ The ALEP project aims to streamline the loan application process by leveraging f
 ## Features
 
 - **Machine Learning Model:** Utilizes a powerful machine learning model for accurate loan eligibility predictions.
-- **Web Application:** A user-friendly web interface for submitting loan applications and receiving instant decisions.
+- **Web Application:** A user-friendly React.js web interface for submitting loan applications and receiving instant decisions.
 - **Dynamic Dashboard:** Visualizes user financial health, eligibility results, and personalized credit improvement tips.
 
 
 ## File Structure
 
-frontend/: Contains all files related to the Angular frontend.
-    src/: Contains the Angular application source code.
-    app/: Contains Angular components, services, models, etc.
-    assets/: Contains static assets such as images, fonts, etc.
-    angular.json: Angular project configuration file.
-    package.json: Node.js package configuration file.
-    tsconfig.json: TypeScript configuration file.
+frontend/: Contains all files related to the React frontend.
+    src/: Contains the React application source code.
+        components/:
+            Dashboard.js: Component displaying the user dashboard, including loan eligibility results.
+            LoanApplicationForm.js: Component for users to fill out and submit a loan application form.
+        services/:
+            loanService.js: Contains functions for API calls to the Flask backend for loan processing.
+        App.js: The main React application component that includes routing logic.
+        index.js: Entry point for the React application that renders the App component.
+    package.json: Node.js package configuration file, listing project dependencies and scripts.
+    
 
+app/: Contains all files related to the Flask backend.
+    database/: Contains database-related files, facilitating migrations, scripts, and data management.
+        migrations/: Directory for database migration scripts (if using a migration tool like Alembic).
+        scripts/: Directory for database-related scripts, including maintenance or utility scripts.
+        data/: Directory for storing initial data or backups, useful for database seeding or recovery.
+        setup.sql: Initial setup script for PostgreSQL, used to create databases and tables.
+    models/: Contains ML Predictive Models, including pre-trained models and their associated files.
+    __init__.py: Initializes the Flask application and configures components like the database.
+    routes.py: Defines URL routes and view functions, mapping endpoints to Python functions.
+    models.py: Contains SQLAlchemy database models, representing tables and their relationships.
+    
 
-backend/: Contains all files related to the Flask backend.
-    app/: Contains the Flask application code.
-    static/: Contains static files like CSS, JavaScript, etc.
-    templates/: Contains HTML templates.
-    __init__.py: Initializes the Flask application.
-    routes.py: Defines URL routes and view functions.
-    models.py: Contains database models.
-    config.py: Configuration file for the Flask application.
-    requirements.txt: File listing Python dependencies.
-    run.py: Script to run the Flask application.
-
-
-database/: Contains database-related files.
-    migrations/: Directory for database migration scripts (if using a migration tool like Alembic).
-    scripts/: Directory for database-related scripts.
-    data/: Directory for storing initial data or backups.
-    setup.sql: Initial setup script for PostgreSQL
+app.py: Script to run the Flask application, initializing and starting the Flask server.
+config.py: Configuration file for the Flask application.
+get-pip.py: A Python script used for installing pip, Python's package installer, if it's not already installed.
+requirements.txt: File listing Python dependencies required for the Flask backend, ensuring consistent environments.
