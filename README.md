@@ -18,10 +18,10 @@ The ALEP project aims to streamline the loan application process by leveraging f
 frontend/: Contains all files related to the React frontend.  
     src/: Contains the React application source code.  
         components/:  
-            Dashboard.js: Component displaying the user dashboard, including loan eligibility results.  
-            LoanApplicationForm.js: Component for users to fill out and submit a loan application form.  
+             Dashboard.js: Component displaying the user dashboard, including loan eligibility results.  
+             LoanApplicationForm.js: Component for users to fill out and submit a loan application form.  
         services/:  
-            loanService.js: Contains functions for API calls to the Flask backend for loan processing.  
+             loanService.js: Contains functions for API calls to the Flask backend for loan processing.  
         App.js: The main React application component that includes routing logic.  
         index.js: Entry point for the React application that renders the App component.  
     package.json: Node.js package configuration file, listing project dependencies and scripts.  
