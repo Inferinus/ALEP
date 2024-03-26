@@ -1,13 +1,17 @@
 from joblib import load
-from app import app, db
+from app import create_app
+from app import db
 import numpy as np
 import pandas as pd
 import json
 
+from app import create_app
+
+app = create_app()
 
 # Configure the SQLAlchemy part of the app instance
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://db_admin:alep2024@localhost/alepdb'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://db_admin:alep2024@localhost/alepdb'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 RFclassifier = load('app/models/random_forest_model.joblib')
 scaler = load('app/models/scaler.joblib')
