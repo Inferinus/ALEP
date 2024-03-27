@@ -1,14 +1,17 @@
-from flask import Flask, request, jsonify, send_from_directory
-from app import app, db
+from flask import current_app as app, request, jsonify, send_from_directory, render_template
 from app.models import User, LoanApplication, LoanDecision, evaluate_loan_eligibility, create_user, retrieve_user, update_user, delete_user, create_loan_application, create_loan_decision
 from sqlalchemy.exc import SQLAlchemyError
 import psycopg2
 import os
 
+from app import create_app
+
+app = create_app()
+
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    if path != "" and os.path.exists(app.static_folder + '/' + path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
