@@ -1,142 +1,94 @@
-from joblib import load
-from app import create_app
-from app import db
-import numpy as np
 import pandas as pd
-import json
+import numpy as np
+from joblib import load
+import os
 
-from app import create_app
-
-app = create_app()
-
-# Configure the SQLAlchemy part of the app instance
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://db_admin:alep2024@localhost/alepdb'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-RFclassifier = load('app/models/random_forest_model.joblib')
-scaler = load('app/models/scaler.joblib')
-
-
-# Database Models
-class User(db.Model):
-    __tablename__ = 'users'
-    user_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255), unique=True, nullable=False)
-    email = db.Column(db.String(255), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-
-class LoanApplication(db.Model):
-    __tablename__ = 'loan_applications'
-    application_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
-    loan_amount = db.Column(db.Numeric, nullable=False)
-    credit_score = db.Column(db.Integer, nullable=False)
-    employment_status = db.Column(db.String(255), nullable=False)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-
-class LoanDecision(db.Model):
-    __tablename__ = 'loan_decisions'
-    decision_id = db.Column(db.Integer, primary_key=True)
-    application_id = db.Column(db.Integer, db.ForeignKey('loan_applications.application_id'), nullable=False)
-    answer = db.Column(db.String(255), nullable=False)
-    reason = db.Column(db.String(255), nullable=False)
-    decision_data = db.Column(db.JSON)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
-
-
+# Load the model and scaler
+model_path = os.path.join(os.path.dirname(__file__), 'models', 'random_forest_model.joblib')
+scaler_path = os.path.join(os.path.dirname(__file__), 'models', 'scaler.joblib')
+RFclassifier = load(model_path)
+scaler = load(scaler_path)
 
 def preprocess_input_data(data):
     """
-    Preprocess the input data to match the training format.
+    Adjust preprocessing to closely align with the training phase.
     """
-    # Create a DataFrame from the input data
+    # Convert input data to DataFrame
     input_df = pd.DataFrame([data])
-    
-    # Handling missing values
-    for column in ['Gender', 'Married', 'Dependents', 'Self_Employed', 'Credit_History', 'Loan_Amount_Term']:
-        input_df[column] = input_df[column].fillna(input_df[column].mode()[0])
-    input_df['LoanAmount'] = input_df['LoanAmount'].fillna(input_df['LoanAmount'].mean())
-    
-    # Apply square root transformation
-    input_df['ApplicantIncome'] = np.sqrt(input_df['ApplicantIncome'])
-    input_df['CoapplicantIncome'] = np.sqrt(input_df['CoapplicantIncome'])
-    input_df['LoanAmount'] = np.sqrt(input_df['LoanAmount'])
-    
-    # Encoding categorical variables as done before model training
-    input_df = pd.get_dummies(input_df, drop_first=True)
-    
-    # Ensure all columns used in training are present, fill missing with 0s
-    model_columns = ['ApplicantIncome', 'CoapplicantIncome', 'LoanAmount', 'Loan_Amount_Term', 'Credit_History',
-                     'Gender_Male', 'Married_Yes', 'Education_Not Graduate', 'Self_Employed_Yes', 
-                     'Property_Area_Semiurban', 'Property_Area_Urban']  # Add all columns used in training
-    for col in model_columns:
+
+    # Numeric transformations
+    input_df['ApplicantIncome'] = np.sqrt(float(data['applicantIncome']))
+    input_df['CoapplicantIncome'] = np.sqrt(float(data['coapplicantIncome']))
+    input_df['LoanAmount'] = np.sqrt(float(data['loanAmount']))
+
+    # Directly usable fields
+    input_df['Loan_Amount_Term'] = float(data['loanTerm'])
+    input_df['Credit_History'] = float(data['creditHistory'])
+
+    # Convert categorical fields to True/False
+    input_df['Gender'] = data['gender'] == 'Male'
+    input_df['Married'] = data['married'] == 'Yes'
+    input_df['Education'] = data['education'] == 'Graduate'
+    input_df['Self_Employed'] =  data['selfEmployed'] == 'Yes'
+
+    # Dependents
+    for i in range(4):
+        dep_key = str(i) if i < 3 else '3+'
+        input_df[f'Dependents_{dep_key}'] = data['dependents'] == dep_key
+
+    # Property Area handling
+    for area in ['Rural', 'Semiurban', 'Urban']:
+        input_df[f'Property_Area_{area}'] = data['propertyArea'] == area
+
+    # Reordered columns to match the training phase
+    expected_columns = [
+        'ApplicantIncome', 'CoapplicantIncome', 'LoanAmount', 'Loan_Amount_Term', 'Credit_History',
+        'Gender', 'Married', 'Dependents_0', 'Dependents_1', 'Dependents_2', 'Dependents_3+',
+        'Education', 'Self_Employed', 'Property_Area_Rural', 'Property_Area_Semiurban', 'Property_Area_Urban'
+    ]
+
+    # Ensure all expected columns are present
+    for col in expected_columns:
         if col not in input_df.columns:
-            input_df[col] = 0
+            input_df[col] = False  # Assume missing columns are False
+
+    # Order columns
+    input_df = input_df[expected_columns]
+    print("Input data")
+    print(input_df)
     
-    input_df = input_df[model_columns]
-    
-    return input_df
+    # Scaling
+    input_df_scaled = scaler.transform(input_df)
+
+    return input_df_scaled
 
 def evaluate_loan_eligibility(data):
     """
-    Evaluate loan eligibility using the Random Forest model.
+    Evaluate loan eligibility using the preprocessed data and the Random Forest model.
     """
     preprocessed_data = preprocess_input_data(data)
+    print("Processed Data")
+    print(preprocessed_data)
+    #prediction = RFclassifier.predict(preprocessed_data)
+
+    probabilities = RFclassifier.predict_proba(preprocessed_data)
     
-    # If you used a scaler, apply it
-    scaled_data = scaler.transform(preprocessed_data)
+    #Model Threshold
+    new_threshold = 0.75
+    prediction = (probabilities[:, 1] >= new_threshold).astype(int)
+
+    # Calculating feature importances
+    feature_importances = RFclassifier.feature_importances_
+    features = np.array([
+        'ApplicantIncome', 'CoapplicantIncome', 'LoanAmount', 'Loan_Amount_Term', 'Credit_History',
+        'Gender', 'Married', 'Dependents_0', 'Dependents_1', 'Dependents_2', 'Dependents_3+',
+        'Education', 'Self_Employed', 'Property_Area_Rural', 'Property_Area_Semiurban', 'Property_Area_Urban'
+    ])
+    feature_importance_series = pd.Series(feature_importances, index=features)
+    sorted_feature_importance = feature_importance_series.sort_values(ascending=False)
     
-    # Make a prediction
-    prediction = RFclassifier.predict(scaled_data)
-    
+    print("Feature Importances:")
+    print(sorted_feature_importance)
+
     result_status = "Approved" if prediction[0] == 1 else "Rejected"
-    
-    result = {
-        "status": result_status,
-    }
-    
-    return result
-
-# Users procedures
-def create_user(username, password, email):
-    sql = "CALL createUser(:username, :password, :email);"
-    db.session.execute(sql, {'username': username, 'password': password, 'email': email})
-    db.session.commit()
-
-def retrieve_user(user_id):
-    sql = "CALL retrieveUser(:user_id);"
-    result = db.session.execute(sql, {'user_id': user_id})
-    return result.fetchone()
-
-def update_user(user_id, username, password, email):
-    sql = "CALL updateUser(:user_id, :username, :password, :email);"
-    db.session.execute(sql, {'user_id': user_id, 'username': username, 'password': password, 'email': email})
-    db.session.commit()
-
-def delete_user(user_id):
-    sql = "CALL deleteUser(:user_id);"
-    db.session.execute(sql, {'user_id': user_id})
-    db.session.commit()
-
-# Loan Application procedures
-def create_loan_application(user_id, application_data):
-    sql = "CALL createLoanApplication(:user_id, :application_data);"
-    db.session.execute(sql, {'user_id': user_id, 'application_data': application_data})
-    db.session.commit()
-
-# Loan Decisions procedures
-def create_loan_decision(application_id, decision):
-    # Assuming `decision` is a dictionary that you'll convert to JSON
-    decision_json = json.dumps(decision)
-    sql = "CALL createLoanDecision(:application_id, :decision_json);"
-    db.session.execute(sql, {'application_id': application_id, 'decision_json': decision_json})
-    db.session.commit()
-
-
-
-
-
-# Ensure to create the database and tables before running the application
-if __name__ == '__main__':
-    db.create_all()
+    return {"status": result_status}

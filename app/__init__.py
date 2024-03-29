@@ -1,18 +1,11 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from config import Config
-
-db = SQLAlchemy()
-cors = CORS()
 
 def create_app():
-    app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
-    app.config.from_object(Config)
+    app = Flask(__name__)
+    CORS(app)
 
-    db.init_app(app)
-    cors.init_app(app)
-
-    from app import routes, models
+    with app.app_context():
+        from . import routes
 
     return app
