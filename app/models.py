@@ -2,12 +2,35 @@ import pandas as pd
 import numpy as np
 from joblib import load
 import os
+from . import db
 
 # Load the model and scaler
 model_path = os.path.join(os.path.dirname(__file__), 'models', 'random_forest_model.joblib')
 scaler_path = os.path.join(os.path.dirname(__file__), 'models', 'scaler.joblib')
 RFclassifier = load(model_path)
 scaler = load(scaler_path)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(80), nullable=False)
+
+class LoanApplication(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    loan_amount = db.Column(db.Float, nullable=False)
+    credit_score = db.Column(db.Integer, nullable=False)
+    employment_status = db.Column(db.String(80), nullable=False)
+
+class LoanDecision(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    application_id = db.Column(db.Integer, db.ForeignKey('loan_application.id'), nullable=False)
+    answer = db.Column(db.String(80), nullable=False)
+    reason = db.Column(db.String(250), nullable=True)
+    decision_date = db.Column(db.DateTime, nullable=False)
+
 
 def preprocess_input_data(data):
     """
@@ -54,7 +77,7 @@ def preprocess_input_data(data):
 
     # Order columns
     input_df = input_df[expected_columns]
-    print("Input data")
+    print("\nInput data formated: ")
     print(input_df)
     
     # Scaling
@@ -67,7 +90,7 @@ def evaluate_loan_eligibility(data):
     Evaluate loan eligibility using the preprocessed data and the Random Forest model.
     """
     preprocessed_data = preprocess_input_data(data)
-    print("Processed Data")
+    print("\nProcessed Data")
     print(preprocessed_data)
     #prediction = RFclassifier.predict(preprocessed_data)
 
@@ -87,7 +110,7 @@ def evaluate_loan_eligibility(data):
     feature_importance_series = pd.Series(feature_importances, index=features)
     sorted_feature_importance = feature_importance_series.sort_values(ascending=False)
     
-    print("Feature Importances:")
+    print("\nFeature Importances:")
     print(sorted_feature_importance)
 
     result_status = "Approved" if prediction[0] == 1 else "Rejected"
