@@ -1,12 +1,48 @@
-from flask import request, jsonify, render_template, current_app as app
+from flask import request, jsonify, current_app as app, session
 from . import db 
 from app.models import User, LoanApplication, LoanDecision, evaluate_loan_eligibility
 from datetime import datetime
 
-@app.route('/', methods=['GET', 'POST'])
-def home():
-    return render_template("index.html")
 
+
+# Login-related Routes
+@app.route('/api/signup', methods=['POST'])
+def signup():
+    data = request.get_json()
+    existing_user = User.query.filter_by(email=data['email']).first()
+    if existing_user is None:
+        user = User(firstname=data['firstname'], lastname=data['lastname'], username=data['username'], email=data['email'])
+        user.set_password(data['password'])
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({"message": "User successfully registered."}), 201
+    else:
+        return jsonify({"error": "User already exists"}), 409
+
+@app.route('/api/signin', methods=['POST'])
+def signin():
+    data = request.get_json()
+    user = User.query.filter_by(email=data['email']).first()
+    if user and user.check_password(data['password']):
+        return jsonify({
+        "message": "User successfully signed in.",
+        "user": {
+            "id": user.id,
+            "firstname": user.firstname,
+            "lastname": user.lastname,
+            "username": user.username,
+            "email": user.email}}), 200
+    else:
+        return jsonify({"error": "Invalid email or password"}), 401
+    
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({"message": "Logged out successfully"}), 200
+
+
+
+# Loan Eligibility Route
 @app.route('/api/predict_loan_eligibility', methods=['POST'])
 def predict_loan_eligibility():
     try:
@@ -20,17 +56,10 @@ def predict_loan_eligibility():
         print(e)  # Log the error for debugging
         return jsonify({"error": "An error occurred during processing.", "details": str(e)}), 500
 
-@app.route('/submit_application', methods=['POST'])
-def submit_application():
-    input_data = request.get_json()
-    result_status = evaluate_loan_eligibility(input_data)
-    # Render the result.html template with the prediction result
-    return render_template('result.html', result_status=result_status)
-
 
 
 # CRUD OPERATIONS FOR DATABASE
-
+    # User Routes
 @app.route('/create_user', methods=['POST'])
 def create_user():
     data = request.get_json()
@@ -48,8 +77,12 @@ def retrieve_user(user_id):
 def update_user(user_id):
     user = User.query.get_or_404(user_id)
     data = request.get_json()
+    user.firstname = data.get('firstname', user.firstname)
+    user.lastname = data.get('lastname', user.lastname)
     user.username = data.get('username', user.username)
     user.email = data.get('email', user.email)
+    if 'password' in data and data['password']:
+        user.set_password(data['password'])
     db.session.commit()
     return jsonify({"message": "User updated successfully"}), 200
 
@@ -60,7 +93,7 @@ def delete_user(user_id):
     db.session.commit()
     return jsonify({"message": "User deleted successfully"}), 200
 
-# LoanApplication Routes
+    # LoanApplication Routes
 @app.route('/create_loan_application', methods=['POST'])
 def create_loan_application():
     data = request.get_json()
@@ -101,7 +134,7 @@ def delete_loan_application(application_id):
     db.session.commit()
     return jsonify({"message": "Loan Application deleted successfully"}), 200
 
-# LoanDecision Routes
+    # LoanDecision Routes
 @app.route('/create_loan_decision', methods=['POST'])
 def create_loan_decision():
     data = request.get_json()
@@ -131,7 +164,7 @@ def update_loan_decision(decision_id):
     data = request.get_json()
     loan_decision.answer = data.get('answer', loan_decision.answer)
     loan_decision.reason = data.get('reason', loan_decision.reason)
-    # Assuming you don't update decision_date as it represents the initial decision time
+    # Assuming we don't update decision_date as it represents the initial decision time
     db.session.commit()
     return jsonify({"message": "Loan Decision updated successfully"}), 200
 

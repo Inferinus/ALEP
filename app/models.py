@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from joblib import load
 import os
+from werkzeug.security import generate_password_hash, check_password_hash
+import bcrypt
 from . import db
 
 # Load the model and scaler
@@ -13,9 +15,18 @@ scaler = load(scaler_path)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    firstname = db.Column(db.String(80), nullable=False)
+    lastname = db.Column(db.String(80), nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(80), nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
+
+    def set_password(self, password):
+        self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+    def check_password(self, password):
+        # Verifying the password
+        return bcrypt.checkpw(password.encode('utf-8'), self.password_hash.encode('utf-8'))
 
 class LoanApplication(db.Model):
     id = db.Column(db.Integer, primary_key=True)
