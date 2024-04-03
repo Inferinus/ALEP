@@ -6,6 +6,7 @@ function Navbar({ setIsAuthenticated }) {
 
     const handleLogout = () => {
         localStorage.removeItem('userId'); // Clear user ID from local storage
+        setIsAuthenticated(false); // Update isAuthenticated state
         navigate('/signin'); // Redirect the user to the sign-in page
     };
 

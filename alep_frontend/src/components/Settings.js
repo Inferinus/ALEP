@@ -7,9 +7,14 @@ function Settings() {
         lastname: '',
         username: '',
         email: '',
-        password: ''
     });
-    const [isUpdating, setIsUpdating] = useState(false);
+    const [passwordData, setPasswordData] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+    });
+    const [isEditingInfo, setIsEditingInfo] = useState(false);
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
 
     useEffect(() => {
         const userId = localStorage.getItem('userId');
@@ -22,25 +27,26 @@ function Settings() {
             .then(response => response.json())
             .then(data => {
                 setUserData({
-                    ...userData,
                     firstname: data.firstname,
                     lastname: data.lastname,
                     username: data.username,
-                    email: data.email
-                    // Don't fetch password
+                    email: data.email,
                 });
             })
             .catch(error => console.error('Error fetching user data:', error));
         }
     }, []);
 
-    const handleChange = (e) => {
+    const handleUserDataChange = (e) => {
         setUserData({ ...userData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (event) => {
+    const handlePasswordDataChange = (e) => {
+        setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
+    };
+
+    const handleEditInfoSubmit = async (event) => {
         event.preventDefault();
-        setIsUpdating(true);
         const userId = localStorage.getItem('userId');
 
         fetch(`/api/update_user/${userId}`, {
@@ -50,42 +56,121 @@ function Settings() {
             },
             body: JSON.stringify(userData),
         })
-        .then(response => {
-            if (response.ok) {
-                alert('Profile updated successfully.');
-            } else {
-                alert('Failed to update profile.');
+        .then(response => response.ok ? alert('Profile updated successfully.') : alert('Failed to update profile.'))
+        .catch(error => console.error('Error updating user data:', error));
+    };
+
+    const handleChangePasswordSubmit = async (event) => {
+        event.preventDefault();
+        const userId = localStorage.getItem('userId');
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            alert('New password and confirm password do not match.');
+            return;
+        }
+    
+        fetch(`/api/change_password/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                currentPassword: passwordData.currentPassword,
+                newPassword: passwordData.newPassword,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+                // Optionally reset form or redirect
+            } else if (data.error) {
+                alert(data.error);
             }
-            setIsUpdating(false);
         })
         .catch(error => {
-            console.error('Error updating user data:', error);
-            setIsUpdating(false);
+            console.error('Error changing password:', error);
         });
     };
+    
 
     return (
         <div className="Settings">
             <h2>Settings</h2>
-            <form onSubmit={handleSubmit}>
+            {!isEditingInfo && !isChangingPassword && (
                 <div>
-                    <label>First Name:</label>
-                    <input type="text" name="firstname" value={userData.firstname} onChange={handleChange} required />
+                    <p>First Name: {userData.firstname}</p>
+                    <p>Last Name: {userData.lastname}</p>
+                    <p>Username: {userData.username}</p>
+                    <p>Email: {userData.email}</p>
+                    <button onClick={() => setIsEditingInfo(true)}>Edit Info</button>
+                    <button onClick={() => setIsChangingPassword(true)}>Change Password</button>
                 </div>
-                <div>
-                    <label>Last Name:</label>
-                    <input type="text" name="lastname" value={userData.lastname} onChange={handleChange} required />
-                </div>
-                <div>
-                    <label>Username:</label>
-                    <input type="text" name="username" value={userData.username} onChange={handleChange} required />
-                </div>
-                <div>
-                    <label>Email:</label>
-                    <input type="email" name="email" value={userData.email} onChange={handleChange} required />
-                </div>
-                <button type="submit" disabled={isUpdating}>Update Profile</button>
-            </form>
+            )}
+            {isEditingInfo && (
+  <form onSubmit={handleEditInfoSubmit}>
+    <div>
+      <label htmlFor="firstname">First Name:</label>
+      <input
+        type="text"
+        name="firstname"
+        value={userData.firstname}
+        onChange={handleUserDataChange}
+        required
+      />
+    </div>
+    <div>
+      <label htmlFor="lastname">Last Name:</label>
+      <input
+        type="text"
+        name="lastname"
+        value={userData.lastname}
+        onChange={handleUserDataChange}
+        required
+      />
+    </div>
+    <div>
+      <label htmlFor="username">Username:</label>
+      <input
+        type="text"
+        name="username"
+        value={userData.username}
+        onChange={handleUserDataChange}
+        required
+      />
+    </div>
+    <div>
+      <label htmlFor="email">Email:</label>
+      <input
+        type="email"
+        name="email"
+        value={userData.email}
+        onChange={handleUserDataChange}
+        required
+      />
+    </div>
+    <button type="submit">Update Profile</button>
+    <button type="button" onClick={() => setIsEditingInfo(false)}>Go Back</button>
+  </form>
+)}
+
+            {isChangingPassword && (
+                <form onSubmit={handleChangePasswordSubmit}>
+                    <div>
+                        <label>Current Password:</label>
+                        <input type="password" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordDataChange} required />
+                    </div>
+                    <div>
+                        <label>New Password:</label>
+                        <input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordDataChange} required />
+                    </div>
+                    <div>
+                        <label>Confirm Password:</label>
+                        <input type="password" name="confirmPassword" value={passwordData.confirmPassword} onChange={handlePasswordDataChange} required />
+                    </div>
+                    <button type="submit">Change Password</button>
+                    <button type="button" onClick={() => setIsChangingPassword(false)}>Go Back</button>
+                </form>
+            )}
         </div>
     );
 }

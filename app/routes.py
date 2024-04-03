@@ -42,6 +42,20 @@ def logout():
 
 
 
+# Change password
+@app.route('/api/change_password/<int:user_id>', methods=['PUT'])
+def change_password(user_id):
+    data = request.get_json()
+    user = User.query.get(user_id)
+    if not user or not user.check_password(data['currentPassword']):
+        return jsonify({'error': 'Invalid current password'}), 400
+    user.set_password(data['newPassword'])
+    db.session.commit()
+    return jsonify({'message': 'Password changed successfully'}), 200
+
+
+
+
 # Loan Eligibility Route
 @app.route('/api/predict_loan_eligibility', methods=['POST'])
 def predict_loan_eligibility():
@@ -68,12 +82,12 @@ def create_user():
     db.session.commit()
     return jsonify({"message": "User created successfully"}), 201
 
-@app.route('/retrieve_user/<int:user_id>', methods=['GET'])
+@app.route('/api/retrieve_user/<int:user_id>', methods=['GET'])
 def retrieve_user(user_id):
     user = User.query.get_or_404(user_id)
-    return jsonify({"username": user.username, "email": user.email}), 200
+    return jsonify({"username": user.username, "email": user.email, "firstname": user.firstname, "lastname": user.lastname}), 200
 
-@app.route('/update_user/<int:user_id>', methods=['PUT'])
+@app.route('/api/update_user/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
     user = User.query.get_or_404(user_id)
     data = request.get_json()

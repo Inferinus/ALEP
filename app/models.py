@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from joblib import load
 import os
-from werkzeug.security import generate_password_hash, check_password_hash
 import bcrypt
 from . import db
 

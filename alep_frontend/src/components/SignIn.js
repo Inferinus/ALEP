@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
-function SignIn() {
+
+function SignIn({ setIsAuthenticated }) { // Destructure setIsAuthenticated from props
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
   });
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -25,14 +27,16 @@ function SignIn() {
       if (response.ok) {
         alert('Sign in successful');
         localStorage.setItem('userId', result.user.id); // Storing user ID
+        setIsAuthenticated(true); // Update the authentication state
         navigate('/dashboard'); // Redirect to the dashboard
       } else {
-        alert(result.message); // Show error message from server
+        alert('Email or password is incorrect!'); // Show error message from server
       }
     } catch (error) {
       alert('An error occurred: ' + error.message);
     }
   };
+
 
   return (
     <div className="SignIn">
