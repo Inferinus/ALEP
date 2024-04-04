@@ -6,6 +6,7 @@ from datetime import datetime
 
 
 # Login-related Routes
+
 @app.route('/api/signup', methods=['POST'])
 def signup():
     data = request.get_json()
@@ -42,45 +43,76 @@ def logout():
 
 
 
-# Change password
-@app.route('/api/change_password/<int:user_id>', methods=['PUT'])
-def change_password(user_id):
-    data = request.get_json()
-    user = User.query.get(user_id)
-    if not user or not user.check_password(data['currentPassword']):
-        return jsonify({'error': 'Invalid current password'}), 400
-    user.set_password(data['newPassword'])
-    db.session.commit()
-    return jsonify({'message': 'Password changed successfully'}), 200
+# Loan Application Related Routes
 
-
-
-
-# Loan Eligibility Route
 @app.route('/api/predict_loan_eligibility', methods=['POST'])
 def predict_loan_eligibility():
     try:
+        user_id = request.json.get('user_id')
+        print("User ID:", user_id)  # Debugging line
         input_data = request.get_json()
         print("\nInput data from application: ")
         print(input_data)
-        result_status = evaluate_loan_eligibility(input_data)
-        print(result_status)
-        return jsonify(result_status)
+        
+        # Evaluate eligibility and generate reasons if needed
+        result = evaluate_loan_eligibility(input_data)
+        
+        # Save loan application
+        new_application = LoanApplication(
+            user_id=user_id,
+            gender=input_data['gender'],
+            married=input_data['married'],
+            dependents=input_data['dependents'],
+            education=input_data['education'],
+            self_employed=input_data['selfEmployed'],
+            applicant_income=input_data['applicantIncome'],
+            coapplicant_income=input_data['coapplicantIncome'],
+            loan_amount=input_data['loanAmount'],
+            loan_term=input_data['loanTerm'],
+            credit_history=input_data['creditHistory'],
+            property_area=input_data['propertyArea'],
+        )
+        db.session.add(new_application)
+        db.session.flush()  # This is to get the application id before committing
+        
+        # Save loan decision
+        new_decision = LoanDecision(
+            application_id=new_application.id,
+            answer=result['status'],
+            reason=', '.join(result.get('reasons', [])),
+            decision_date=datetime.utcnow()
+        )
+        db.session.add(new_decision)
+        db.session.commit()
+        
+        print(result)
+        return jsonify(result)
     except Exception as e:
-        print(e)  # Log the error for debugging
+        print(e)
         return jsonify({"error": "An error occurred during processing.", "details": str(e)}), 500
 
+@app.route('/api/user_loan_applications/<int:user_id>', methods=['GET'])
+def user_loan_applications(user_id):
+    # Retrieve all loan applications for the given user ID
+    applications = LoanApplication.query.filter_by(user_id=user_id).all()
+    applications_data = []
+    for application in applications:
+        # Retrieve the decision for each application
+        decision = LoanDecision.query.filter_by(application_id=application.id).first()
+        applications_data.append({
+            "application_id": application.id,
+            "loan_amount": application.loan_amount,
+            "loan_term": application.loan_term,
+            "status": decision.answer if decision else 'Pending',
+            "reason": decision.reason if decision else None,
+            "decision_date": decision.decision_date.strftime('%Y-%m-%d %H:%M:%S') if decision else None,
+        })
+    return jsonify(applications_data)
 
 
-# CRUD OPERATIONS FOR DATABASE
-    # User Routes
-@app.route('/create_user', methods=['POST'])
-def create_user():
-    data = request.get_json()
-    new_user = User(username=data['username'], email=data['email'], password=data['password'])
-    db.session.add(new_user)
-    db.session.commit()
-    return jsonify({"message": "User created successfully"}), 201
+
+
+# Misc CRUD database operations
 
 @app.route('/api/retrieve_user/<int:user_id>', methods=['GET'])
 def retrieve_user(user_id):
@@ -100,91 +132,21 @@ def update_user(user_id):
     db.session.commit()
     return jsonify({"message": "User updated successfully"}), 200
 
-@app.route('/delete_user/<int:user_id>', methods=['DELETE'])
+@app.route('/api/delete_user/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    user = User.query.get_or_404(user_id)
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
     db.session.delete(user)
     db.session.commit()
     return jsonify({"message": "User deleted successfully"}), 200
 
-    # LoanApplication Routes
-@app.route('/create_loan_application', methods=['POST'])
-def create_loan_application():
+@app.route('/api/change_password/<int:user_id>', methods=['PUT'])
+def change_password(user_id):
     data = request.get_json()
-    new_loan_application = LoanApplication(
-        user_id=data['user_id'],
-        loan_amount=data['loan_amount'],
-        credit_score=data['credit_score'],
-        employment_status=data['employment_status']
-    )
-    db.session.add(new_loan_application)
+    user = User.query.get(user_id)
+    if not user or not user.check_password(data['currentPassword']):
+        return jsonify({'error': 'Invalid current password'}), 400
+    user.set_password(data['newPassword'])
     db.session.commit()
-    return jsonify({"message": "Loan Application created successfully"}), 201
-
-@app.route('/retrieve_loan_application/<int:application_id>', methods=['GET'])
-def retrieve_loan_application(application_id):
-    loan_application = LoanApplication.query.get_or_404(application_id)
-    return jsonify({
-        "user_id": loan_application.user_id,
-        "loan_amount": loan_application.loan_amount,
-        "credit_score": loan_application.credit_score,
-        "employment_status": loan_application.employment_status
-    }), 200
-
-@app.route('/update_loan_application/<int:application_id>', methods=['PUT'])
-def update_loan_application(application_id):
-    loan_application = LoanApplication.query.get_or_404(application_id)
-    data = request.get_json()
-    loan_application.loan_amount = data.get('loan_amount', loan_application.loan_amount)
-    loan_application.credit_score = data.get('credit_score', loan_application.credit_score)
-    loan_application.employment_status = data.get('employment_status', loan_application.employment_status)
-    db.session.commit()
-    return jsonify({"message": "Loan Application updated successfully"}), 200
-
-@app.route('/delete_loan_application/<int:application_id>', methods=['DELETE'])
-def delete_loan_application(application_id):
-    loan_application = LoanApplication.query.get_or_404(application_id)
-    db.session.delete(loan_application)
-    db.session.commit()
-    return jsonify({"message": "Loan Application deleted successfully"}), 200
-
-    # LoanDecision Routes
-@app.route('/create_loan_decision', methods=['POST'])
-def create_loan_decision():
-    data = request.get_json()
-    new_loan_decision = LoanDecision(
-        application_id=data['application_id'],
-        answer=data['answer'],
-        reason=data['reason'],
-        decision_date=datetime.utcnow()
-    )
-    db.session.add(new_loan_decision)
-    db.session.commit()
-    return jsonify({"message": "Loan Decision created successfully"}), 201
-
-@app.route('/retrieve_loan_decision/<int:decision_id>', methods=['GET'])
-def retrieve_loan_decision(decision_id):
-    loan_decision = LoanDecision.query.get_or_404(decision_id)
-    return jsonify({
-        "application_id": loan_decision.application_id,
-        "answer": loan_decision.answer,
-        "reason": loan_decision.reason,
-        "decision_date": loan_decision.decision_date.strftime('%Y-%m-%d %H:%M:%S')
-    }), 200
-
-@app.route('/update_loan_decision/<int:decision_id>', methods=['PUT'])
-def update_loan_decision(decision_id):
-    loan_decision = LoanDecision.query.get_or_404(decision_id)
-    data = request.get_json()
-    loan_decision.answer = data.get('answer', loan_decision.answer)
-    loan_decision.reason = data.get('reason', loan_decision.reason)
-    # Assuming we don't update decision_date as it represents the initial decision time
-    db.session.commit()
-    return jsonify({"message": "Loan Decision updated successfully"}), 200
-
-@app.route('/delete_loan_decision/<int:decision_id>', methods=['DELETE'])
-def delete_loan_decision(decision_id):
-    loan_decision = LoanDecision.query.get_or_404(decision_id)
-    db.session.delete(loan_decision)
-    db.session.commit()
-    return jsonify({"message": "Loan Decision deleted successfully"}), 200
+    return jsonify({'message': 'Password changed successfully'}), 200

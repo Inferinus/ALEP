@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import LoanApplicationForm from './components/LoanApplicationForm';
 import Settings from './components/Settings';
 import Navbar from './components/Navbar';
+import LoanApplications from './components/LoanApplications';
 import './App.css';
 
 function App() {
@@ -40,7 +41,8 @@ function App() {
             <>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/apply" element={<LoanApplicationForm />} />
-              <Route path="/settings" element={<Settings />} />
+              <Route path="/loan-applications" element={<LoanApplications />} />
+              <Route path="/settings" element={<Settings setIsAuthenticated={setIsAuthenticated} />} />
             </>
           ) : (
             // Redirect any other route to the signin page if not authenticated

@@ -30,9 +30,18 @@ class User(db.Model):
 class LoanApplication(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    gender = db.Column(db.String(10), nullable=False)
+    married = db.Column(db.String(10), nullable=False)
+    dependents = db.Column(db.String(10), nullable=False)
+    education = db.Column(db.String(20), nullable=False)
+    self_employed = db.Column(db.String(10), nullable=False)
+    applicant_income = db.Column(db.Integer, nullable=False)
+    coapplicant_income = db.Column(db.Integer, nullable=False)
     loan_amount = db.Column(db.Float, nullable=False)
-    credit_score = db.Column(db.Integer, nullable=False)
-    employment_status = db.Column(db.String(80), nullable=False)
+    loan_term = db.Column(db.Integer, nullable=False)
+    credit_history = db.Column(db.Integer, nullable=False)
+    property_area = db.Column(db.String(20), nullable=False)
+
 
 class LoanDecision(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -102,26 +111,30 @@ def evaluate_loan_eligibility(data):
     preprocessed_data = preprocess_input_data(data)
     print("\nProcessed Data")
     print(preprocessed_data)
-    #prediction = RFclassifier.predict(preprocessed_data)
-
+    
     probabilities = RFclassifier.predict_proba(preprocessed_data)
     
-    #Model Threshold
+    # Model Threshold
     new_threshold = 0.75
     prediction = (probabilities[:, 1] >= new_threshold).astype(int)
 
-    # Calculating feature importances
+    # Feature Importances
     feature_importances = RFclassifier.feature_importances_
     features = np.array([
         'ApplicantIncome', 'CoapplicantIncome', 'LoanAmount', 'Loan_Amount_Term', 'Credit_History',
         'Gender', 'Married', 'Dependents_0', 'Dependents_1', 'Dependents_2', 'Dependents_3+',
         'Education', 'Self_Employed', 'Property_Area_Rural', 'Property_Area_Semiurban', 'Property_Area_Urban'
     ])
-    feature_importance_series = pd.Series(feature_importances, index=features)
-    sorted_feature_importance = feature_importance_series.sort_values(ascending=False)
+    feature_importance_series = pd.Series(feature_importances, index=features).sort_values(ascending=False)
     
     print("\nFeature Importances:")
-    print(sorted_feature_importance)
+    print(feature_importance_series)
+
+    # Construct feedback based on feature importance
+    reasons = []
+    if prediction[0] == 0:  # If rejected
+        top_reasons = feature_importance_series.head(3).index.tolist()  # Top 3 features as reasons
+        reasons = [f"Consider improving {reason}." for reason in top_reasons]
 
     result_status = "Approved" if prediction[0] == 1 else "Rejected"
-    return {"status": result_status}
+    return {"status": result_status, "reasons": reasons}

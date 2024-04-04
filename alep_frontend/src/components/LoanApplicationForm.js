@@ -26,13 +26,22 @@ function LoanApplicationForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      alert('User ID is missing. Please log in again.');
+      return;
+    }
     try {
+      const payload = {
+        ...formState,
+        user_id: userId, // Include the user ID in the payload
+      };
       const response = await fetch('/api/predict_loan_eligibility', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formState),
+        body: JSON.stringify(payload),
       });
       const result = await response.json();
       alert(`Application ${result.status}`);
