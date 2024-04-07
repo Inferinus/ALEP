@@ -22,8 +22,8 @@ function LoanApplications() {
       <ul>
         {applications.map(app => (
           <li key={app.application_id}>
-            Loan Amount: {app.loan_amount}, Term: {app.loan_term} months, Status: {app.status}{app.reason ? `, Reason: ${app.reason}` : ''}
-          </li>
+          Loan Amount: {app.loan_amount}, Term: {app.loan_term} months, Status: {app.status}{app.reason ? `, Reason: ${app.reason}` : ''}, Decision Date: {app.decision_date}
+        </li>
         ))}
       </ul>
     </div>

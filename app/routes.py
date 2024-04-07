@@ -2,6 +2,7 @@ from flask import request, jsonify, current_app as app, session
 from . import db 
 from app.models import User, LoanApplication, LoanDecision, evaluate_loan_eligibility
 from datetime import datetime
+import pytz
 
 
 
@@ -77,11 +78,12 @@ def predict_loan_eligibility():
         
         # Save loan decision
         new_decision = LoanDecision(
-            application_id=new_application.id,
-            answer=result['status'],
-            reason=', '.join(result.get('reasons', [])),
-            decision_date=datetime.utcnow()
+        application_id=new_application.id,
+        answer=result['status'],
+        reason=', '.join(result.get('reasons', [])),
+        decision_date=datetime.now(pytz.utc).astimezone(pytz.timezone('US/Eastern'))
         )
+
         db.session.add(new_decision)
         db.session.commit()
         
@@ -105,7 +107,7 @@ def user_loan_applications(user_id):
             "loan_term": application.loan_term,
             "status": decision.answer if decision else 'Pending',
             "reason": decision.reason if decision else None,
-            "decision_date": decision.decision_date.strftime('%Y-%m-%d %H:%M:%S') if decision else None,
+            "decision_date": decision.decision_date.astimezone(pytz.timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M:%S') if decision else None,
         })
     return jsonify(applications_data)
 

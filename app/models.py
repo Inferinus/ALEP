@@ -4,6 +4,8 @@ from joblib import load
 import os
 import bcrypt
 from . import db
+from datetime import datetime
+import pytz
 
 # Load the model and scaler
 model_path = os.path.join(os.path.dirname(__file__), 'models', 'random_forest_model.joblib')
@@ -49,6 +51,12 @@ class LoanDecision(db.Model):
     answer = db.Column(db.String(80), nullable=False)
     reason = db.Column(db.String(250), nullable=True)
     decision_date = db.Column(db.DateTime, nullable=False)
+
+    def __init__(self, application_id, answer, reason, decision_date):
+        self.application_id = application_id
+        self.answer = answer
+        self.reason = reason
+        self.decision_date = decision_date
 
 
 def preprocess_input_data(data):
