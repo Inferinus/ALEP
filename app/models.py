@@ -130,11 +130,48 @@ def evaluate_loan_eligibility(data):
     print("\nFeature Importances:")
     print(feature_importance_series)
 
-    # Construct feedback based on feature importance
-    reasons = []
-    if prediction[0] == 0:  # If rejected
-        top_reasons = feature_importance_series.head(3).index.tolist()  # Top 3 features as reasons
-        reasons = [f"Consider improving {reason}." for reason in top_reasons]
+    response = {"status": "Approved" if prediction[0] == 1 else "Rejected"}
+    
+    if prediction[0] == 0:  # If the application is rejected
+        reasons = []
 
-    result_status = "Approved" if prediction[0] == 1 else "Rejected"
-    return {"status": result_status, "reasons": reasons}
+        # Income-Loan Ratio Check
+        total_income = float(data['applicantIncome']) + float(data['coapplicantIncome'])
+        loan_amount = float(data['loanAmount'])
+        if total_income > 0:
+            income_loan_ratio = loan_amount / total_income
+            if income_loan_ratio > 0.6:  # threshold ratio
+                reasons.append(f"The income to loan amount ratio is too high ({income_loan_ratio:.2f}). Consider reducing the loan amount or increasing income.")
+
+        # Loan Term
+        loan_term = int(data['loanTerm'])
+        if loan_term > 360:
+            reasons.append("The requested loan term is too long. Shortening the loan term may increase approval chances.")
+
+        # Credit History Evaluation
+        if data['creditHistory'] == '0':
+            reasons.append("Improving credit history is crucial for loan approval. Consider checking your credit report for potential improvements.")
+
+        # Self-Employed and Income Stability
+        if data['selfEmployed'] == 'Yes' and total_income < 5000: 
+            reasons.append("For self-employed applicants, demonstrating a higher and stable income may improve loan eligibility.")
+
+        # Marital Status Check
+        if data['married'] == 'No' and feature_importances['Married'] > 0.04:
+            reasons.append("Marital status can impact loan approval. Married applicants may sometimes be viewed as having a more stable financial situation.")
+        
+        # Property Area Influence
+        property_area_feedback = {
+            'Urban': "Urban areas may have stricter evaluation criteria due to higher property values.",
+            'Rural': "Rural areas might see lower approval rates due to perceived market stability concerns.",
+            'Semiurban': "Properties in semi-urban areas generally have better approval rates. Review other aspects of your application if rejected."
+        }
+        reasons.append(property_area_feedback.get(data['propertyArea'], "Property area influence is unclear."))
+
+        # Default message if no specific reasons identified
+        if not reasons:
+            reasons.append("There were no clear factors leading to rejection. Reviewing the application details for accuracy and completeness may help.")
+
+        response["reasons"] = reasons
+
+    return response
