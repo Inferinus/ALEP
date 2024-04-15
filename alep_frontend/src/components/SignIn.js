@@ -25,7 +25,7 @@ function SignIn({ setIsAuthenticated }) { // Destructure setIsAuthenticated from
       });
       const result = await response.json();
       if (response.ok) {
-        alert('Sign in successful');
+        /*alert('Sign in successful');*/
         localStorage.setItem('userId', result.user.id); // Storing user ID
         setIsAuthenticated(true); // Update the authentication state
         navigate('/dashboard'); // Redirect to the dashboard
