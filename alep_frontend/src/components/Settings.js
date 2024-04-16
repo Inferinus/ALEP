@@ -39,6 +39,7 @@ function Settings({ setIsAuthenticated }) {
       }
   }, []);
 
+
   const handleUserDataChange = (e) => {
       setUserData({ ...userData, [e.target.name]: e.target.value });
   };
@@ -48,18 +49,18 @@ function Settings({ setIsAuthenticated }) {
   };
 
   const handleEditInfoSubmit = async (event) => {
-      event.preventDefault();
-      const userId = localStorage.getItem('userId');
+    event.preventDefault();
+    const userId = localStorage.getItem('userId');
 
-      fetch(`/api/update_user/${userId}`, {
-          method: 'PUT',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData),
-      })
-      .then(response => response.ok ? alert('Profile updated successfully.') : alert('Failed to update profile.'))
-      .catch(error => console.error('Error updating user data:', error));
+    fetch(`/api/update_user/${userId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    })
+    .then(setIsEditingInfo(false)) //Close editing form
+    .catch(error => console.error('Error updating user data:', error));
   };
 
   const handleChangePasswordSubmit = async (event) => {
@@ -88,6 +89,7 @@ function Settings({ setIsAuthenticated }) {
           } else if (data.error) {
               alert(data.error);
           }
+          setIsChangingPassword(false);
       })
       .catch(error => {
           console.error('Error changing password:', error);
