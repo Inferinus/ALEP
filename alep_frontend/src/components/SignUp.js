@@ -91,7 +91,7 @@ function SignUp() {
             />
           </div>
           <button type="submit">Sign Up</button>
-          <p>Already have an account? <Link to="/signin">Sign in here</Link></p>
+          <p>Already have an account? <Link to="/signin">Sign In Here</Link></p>
         </form>
         </div>
     </div>

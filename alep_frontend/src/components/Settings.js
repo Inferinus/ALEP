@@ -1,5 +1,6 @@
 // Settings.js
 import React, { useState, useEffect } from 'react';
+//import {useNavigate} from 'react-router-dom';
 
 function Settings({ setIsAuthenticated }) {
   const [userData, setUserData] = useState({
@@ -111,6 +112,8 @@ function Settings({ setIsAuthenticated }) {
       }
     };
 
+    //const navigate = useNavigate();
+
   return (
     <div className="Settings">
         <h2>Settings</h2>
@@ -130,8 +133,9 @@ function Settings({ setIsAuthenticated }) {
             </>
         )}
         {isEditingInfo && (
+    <div className='form-container'>
     <form onSubmit={handleEditInfoSubmit}>
-      <div>
+      <div className='form-group'>
         <label htmlFor="firstname">First Name:</label>
         <input
           type="text"
@@ -141,7 +145,7 @@ function Settings({ setIsAuthenticated }) {
           required
         />
       </div>
-      <div>
+      <div className='form-group'>
         <label htmlFor="lastname">Last Name:</label>
         <input
           type="text"
@@ -151,7 +155,7 @@ function Settings({ setIsAuthenticated }) {
           required
         />
       </div>
-      <div>
+      <div className='form-group'>
         <label htmlFor="username">Username:</label>
         <input
           type="text"
@@ -161,7 +165,7 @@ function Settings({ setIsAuthenticated }) {
           required
         />
       </div>
-      <div>
+      <div className='form-group'>
         <label htmlFor="email">Email:</label>
         <input
           type="email"
@@ -174,11 +178,13 @@ function Settings({ setIsAuthenticated }) {
       <button type="submit">Update Profile</button>
       <button type="button" onClick={() => setIsEditingInfo(false)}>Cancel</button>
     </form>
+    </div>
 )}
 
 {isChangingPassword && (
+    <div className='form-container'>
     <form onSubmit={handleChangePasswordSubmit}>
-        <div>
+        <div className='form-group'>
             <label>Current Password:</label>
             <input
                 type="password"
@@ -188,7 +194,7 @@ function Settings({ setIsAuthenticated }) {
                 required
             />
         </div>
-        <div>
+        <div className='form-group'>
             <label>New Password:</label>
             <input
                 type="password"
@@ -198,7 +204,7 @@ function Settings({ setIsAuthenticated }) {
                 required
             />
         </div>
-        <div>
+        <div className='form-group'>
             <label>Confirm New Password:</label>
             <input
                 type="password"
@@ -211,6 +217,7 @@ function Settings({ setIsAuthenticated }) {
         <button type="submit">Change Password</button>
         <button type="button" onClick={() => setIsChangingPassword(false)}>Cancel</button>
     </form>
+    </div>
 )}
 
         {isDeletingAccount && (

@@ -41,8 +41,9 @@ function SignIn({ setIsAuthenticated }) { // Destructure setIsAuthenticated from
   return (
     <div className="SignIn">
       <h2>Sign In</h2>
+      <div className='form-container'>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className='form-group'>
           <label htmlFor="email">Email:</label>
           <input
             type="email"
@@ -52,7 +53,7 @@ function SignIn({ setIsAuthenticated }) { // Destructure setIsAuthenticated from
             required
           />
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor="password">Password:</label>
           <input
             type="password"
@@ -63,8 +64,10 @@ function SignIn({ setIsAuthenticated }) { // Destructure setIsAuthenticated from
           />
         </div>
         <button type="submit">Sign In</button>
-        <p>Don't have an account? <Link to="/signup">Sign up here</Link></p>
+        <p>Forgot password? <Link to="/forgot-password">Reset Password</Link></p>
+        <p>Don't have an account? <Link to="/signup">Sign Up Here</Link></p>
       </form>
+      </div>
     </div>
   );
 }
