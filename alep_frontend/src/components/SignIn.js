@@ -64,12 +64,14 @@ function SignIn({ setIsAuthenticated }) { // Destructure setIsAuthenticated from
           />
         </div>
         <button type="submit">Sign In</button>
-        <p>Forgot password? <Link to="/forgot-password">Reset Password</Link></p>
+
         <p>Don't have an account? <Link to="/signup">Sign Up Here</Link></p>
       </form>
       </div>
     </div>
   );
 }
+
+//<p>Forgot password? <Link to="/forgot-password">Reset Password</Link></p>
 
 export default SignIn;

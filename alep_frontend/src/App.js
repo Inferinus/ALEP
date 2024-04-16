@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Banner from './components/Banner';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Dashboard from './components/Dashboard';
@@ -30,6 +31,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+      <Banner />
         {/* Conditionally render the Navbar if the user is authenticated */}
         {isAuthenticated && <Navbar handleLogout={handleLogout} setIsAuthenticated={setIsAuthenticated}/>}
         <Routes>
