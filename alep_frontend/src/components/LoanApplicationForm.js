@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function LoanApplicationForm() {
   const [formState, setFormState] = useState({
@@ -24,6 +25,8 @@ function LoanApplicationForm() {
     }));
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userId = localStorage.getItem('userId');
@@ -45,6 +48,7 @@ function LoanApplicationForm() {
       });
       const result = await response.json();
       alert(`Application ${result.status}`);
+      navigate('/dashboard');
     } catch (error) {
       alert('An error occurred: ' + error.message);
     }
@@ -53,7 +57,7 @@ function LoanApplicationForm() {
   return (
     <div className="LoanApplicationForm">
       <h2>Loan Application Form</h2>
-      <div className='form-container' style={{marginBottom: '100px'}}>
+      <div className='form-container'>
       <form onSubmit={handleSubmit}>
         <div className='form-group'>
           <label htmlFor="gender">Gender:</label>
