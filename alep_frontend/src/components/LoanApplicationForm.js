@@ -53,8 +53,9 @@ function LoanApplicationForm() {
   return (
     <div className="LoanApplicationForm">
       <h2>Loan Application Form</h2>
+      <div className='form-container' style={{marginBottom: '100px'}}>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className='form-group'>
           <label htmlFor="gender">Gender:</label>
           <select name="gender" value={formState.gender} onChange={handleChange} required>
             <option value="">Select</option>
@@ -62,7 +63,7 @@ function LoanApplicationForm() {
             <option value="Female">Female</option>
           </select>
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor="married">Married:</label>
           <select name="married" value={formState.married} onChange={handleChange} required>
             <option value="">Select</option>
@@ -70,11 +71,11 @@ function LoanApplicationForm() {
             <option value="No">No</option>
           </select>
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor="dependents">Dependents:</label>
           <input type="number" name="dependents" value={formState.dependents} onChange={handleChange} required />
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor="education">Education:</label>
           <select name="education" value={formState.education} onChange={handleChange} required>
             <option value="">Select</option>
@@ -82,7 +83,7 @@ function LoanApplicationForm() {
             <option value="Not Graduate">Not Graduate</option>
           </select>
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor="selfEmployed">Self Employed:</label>
           <select name="selfEmployed" value={formState.selfEmployed} onChange={handleChange} required>
             <option value="">Select</option>
@@ -90,23 +91,32 @@ function LoanApplicationForm() {
             <option value="No">No</option>
           </select>
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor="applicantIncome">Applicant Income:</label>
+          <div className='income-input'>
+          <span>$</span>
           <input type="number" name="applicantIncome" value={formState.applicantIncome} onChange={handleChange} required />
+          </div>
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor="coapplicantIncome">Coapplicant Income:</label>
+          <div className='income-input'>
+          <span>$</span>
           <input type="number" name="coapplicantIncome" value={formState.coapplicantIncome} onChange={handleChange} required />
+          </div>
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor="loanAmount">Loan Amount:</label>
+          <div className='income-input'>
+          <span>$</span>
           <input type="number" name="loanAmount" value={formState.loanAmount} onChange={handleChange} required />
+          </div>
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor="loanTerm">Loan Term (in months):</label>
           <input type="number" name="loanTerm" value={formState.loanTerm} onChange={handleChange} required />
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor="creditHistory">Credit History:</label>
           <select name="creditHistory" value={formState.creditHistory} onChange={handleChange} required>
             <option value="">Select</option>
@@ -114,7 +124,7 @@ function LoanApplicationForm() {
             <option value="0">Bad</option>
           </select>
         </div>
-        <div>
+        <div className='form-group'>
           <label htmlFor="propertyArea">Property Area:</label>
           <select name="propertyArea" value={formState.propertyArea} onChange={handleChange} required>
             <option value="">Select</option>
@@ -125,6 +135,7 @@ function LoanApplicationForm() {
         </div>
         <button type="submit">Submit</button>
       </form>
+      </div>
     </div>
   );
 }
