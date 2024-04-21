@@ -1,5 +1,6 @@
 // Settings.js
 import React, { useState, useEffect } from 'react';
+//import {useNavigate} from 'react-router-dom';
 
 function Settings({ setIsAuthenticated }) {
   const [userData, setUserData] = useState({
@@ -38,6 +39,7 @@ function Settings({ setIsAuthenticated }) {
       }
   }, []);
 
+
   const handleUserDataChange = (e) => {
       setUserData({ ...userData, [e.target.name]: e.target.value });
   };
@@ -47,18 +49,18 @@ function Settings({ setIsAuthenticated }) {
   };
 
   const handleEditInfoSubmit = async (event) => {
-      event.preventDefault();
-      const userId = localStorage.getItem('userId');
+    event.preventDefault();
+    const userId = localStorage.getItem('userId');
 
-      fetch(`/api/update_user/${userId}`, {
-          method: 'PUT',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(userData),
-      })
-      .then(response => response.ok ? alert('Profile updated successfully.') : alert('Failed to update profile.'))
-      .catch(error => console.error('Error updating user data:', error));
+    fetch(`/api/update_user/${userId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    })
+    .then(setIsEditingInfo(false)) //Close editing form
+    .catch(error => console.error('Error updating user data:', error));
   };
 
   const handleChangePasswordSubmit = async (event) => {
@@ -87,6 +89,7 @@ function Settings({ setIsAuthenticated }) {
           } else if (data.error) {
               alert(data.error);
           }
+          setIsChangingPassword(false);
       })
       .catch(error => {
           console.error('Error changing password:', error);
@@ -111,6 +114,8 @@ function Settings({ setIsAuthenticated }) {
       }
     };
 
+    //const navigate = useNavigate();
+
   return (
     <div className="Settings">
         <h2>Settings</h2>
@@ -130,8 +135,9 @@ function Settings({ setIsAuthenticated }) {
             </>
         )}
         {isEditingInfo && (
+    <div className='form-container'>
     <form onSubmit={handleEditInfoSubmit}>
-      <div>
+      <div className='form-group'>
         <label htmlFor="firstname">First Name:</label>
         <input
           type="text"
@@ -141,7 +147,7 @@ function Settings({ setIsAuthenticated }) {
           required
         />
       </div>
-      <div>
+      <div className='form-group'>
         <label htmlFor="lastname">Last Name:</label>
         <input
           type="text"
@@ -151,7 +157,7 @@ function Settings({ setIsAuthenticated }) {
           required
         />
       </div>
-      <div>
+      <div className='form-group'>
         <label htmlFor="username">Username:</label>
         <input
           type="text"
@@ -161,7 +167,7 @@ function Settings({ setIsAuthenticated }) {
           required
         />
       </div>
-      <div>
+      <div className='form-group'>
         <label htmlFor="email">Email:</label>
         <input
           type="email"
@@ -174,11 +180,13 @@ function Settings({ setIsAuthenticated }) {
       <button type="submit">Update Profile</button>
       <button type="button" onClick={() => setIsEditingInfo(false)}>Cancel</button>
     </form>
+    </div>
 )}
 
 {isChangingPassword && (
+    <div className='form-container'>
     <form onSubmit={handleChangePasswordSubmit}>
-        <div>
+        <div className='form-group'>
             <label>Current Password:</label>
             <input
                 type="password"
@@ -188,7 +196,7 @@ function Settings({ setIsAuthenticated }) {
                 required
             />
         </div>
-        <div>
+        <div className='form-group'>
             <label>New Password:</label>
             <input
                 type="password"
@@ -198,7 +206,7 @@ function Settings({ setIsAuthenticated }) {
                 required
             />
         </div>
-        <div>
+        <div className='form-group'>
             <label>Confirm New Password:</label>
             <input
                 type="password"
@@ -211,6 +219,7 @@ function Settings({ setIsAuthenticated }) {
         <button type="submit">Change Password</button>
         <button type="button" onClick={() => setIsChangingPassword(false)}>Cancel</button>
     </form>
+    </div>
 )}
 
         {isDeletingAccount && (

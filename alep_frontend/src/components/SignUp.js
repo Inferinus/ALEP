@@ -1,6 +1,6 @@
 // SignUp.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function SignUp() {
   const [userData, setUserData] = useState({
@@ -38,59 +38,62 @@ function SignUp() {
   return (
     <div className="SignUp">
       <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="firstname">First Name:</label>
-          <input
-            type="text"
-            name="firstname"
-            value={userData.firstname}
-            onChange={handleChange}
-            required
-          />
+      <div className='form-container'>
+        <form onSubmit={handleSubmit}>
+          <div className='form-group'>
+            <label htmlFor="firstname">First Name: </label>
+            <input
+              type="text"
+              name="firstname"
+              value={userData.firstname}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className='form-group'>
+            <label htmlFor="lastname">Last Name: </label>
+            <input
+              type="text"
+              name="lastname"
+              value={userData.lastname}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className='form-group'>
+            <label htmlFor="email">Email: </label>
+            <input
+              type="email"
+              name="email"
+              value={userData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className='form-group'>
+            <label htmlFor="username">Username: </label>
+            <input
+              type="text"
+              name="username"
+              value={userData.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className='form-group'>
+            <label htmlFor="password">Password: </label>
+            <input
+              type="password"
+              name="password"
+              value={userData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit">Sign Up</button>
+          <p>Already have an account? <Link to="/signin">Sign In Here</Link></p>
+        </form>
         </div>
-        <div>
-          <label htmlFor="lastname">Last Name:</label>
-          <input
-            type="text"
-            name="lastname"
-            value={userData.lastname}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={userData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            name="username"
-            value={userData.username}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={userData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">Sign Up</button>
-      </form>
     </div>
   ); 
 }

@@ -11,11 +11,19 @@ function Navbar({ setIsAuthenticated }) {
     };
 
     return (
-        <nav>
-            <ul>
-                <li><Link to="/dashboard">Dashboard</Link></li>
-                <li><Link to="/settings">Profile Settings</Link></li>
-                <li><button onClick={handleLogout}>Logout</button></li>
+        <nav className='navbar'>
+            <ul className='navbar-nav'>
+                <div className='left-nav'>
+                    <li className='nav-item'>
+                        <Link to="/dashboard" className='nav-link'>Dashboard</Link>
+                    </li>
+                    <li className='nav-item'>
+                        <Link to="/settings" className='nav-link'>Profile Settings</Link>
+                    </li>
+                </div>
+                <li className='nav-item'>
+                    <Link onClick={handleLogout} className='nav-link'>Logout</Link>
+                </li>
             </ul>
         </nav>
     );
