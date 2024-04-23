@@ -113,18 +113,22 @@ def user_loan_applications(user_id):
 
 @app.route('/api/latest_loan_application/<int:user_id>', methods=['GET'])
 def latest_loan_application(user_id):
-    # Retrieve the latest loan application for the given user ID
     application = LoanApplication.query.filter_by(user_id=user_id).order_by(LoanApplication.id.desc()).first()
     if application:
         decision = LoanDecision.query.filter_by(application_id=application.id).first()
-        return jsonify({
-            "application_id": application.id,
-            "loan_amount": application.loan_amount,
-            "status": decision.answer,
-            "decision_date": decision.decision_date.astimezone(pytz.timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M:%S')
-        }), 200
+        if decision:
+            return jsonify({
+                "application_id": application.id,
+                "loan_amount": application.loan_amount,
+                "status": decision.answer,
+                "reason": decision.reason,  # Make sure this is being sent
+                "decision_date": decision.decision_date.astimezone(pytz.timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M:%S')
+            }), 200
+        else:
+            return jsonify({"error": "Decision not found for the latest application"}), 404
     else:
         return jsonify({"error": "No applications found"}), 404
+
 
 
 
