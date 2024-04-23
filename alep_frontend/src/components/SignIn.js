@@ -1,14 +1,10 @@
 // SignIn.js
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import './loginStyles.css'; // Make sure the path matches where your styles.css is located
 
-
-function SignIn({ setIsAuthenticated }) { // Destructure setIsAuthenticated from props
-  const [credentials, setCredentials] = useState({
-    email: '',
-    password: '',
-  });
-
+function SignIn({ setIsAuthenticated }) {
+  const [credentials, setCredentials] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -25,53 +21,36 @@ function SignIn({ setIsAuthenticated }) { // Destructure setIsAuthenticated from
       });
       const result = await response.json();
       if (response.ok) {
-        /*alert('Sign in successful');*/
-        localStorage.setItem('userId', result.user.id); // Storing user ID
-        setIsAuthenticated(true); // Update the authentication state
-        navigate('/dashboard'); // Redirect to the dashboard
+        localStorage.setItem('userId', result.user.id);
+        setIsAuthenticated(true);
+        navigate('/dashboard');
       } else {
-        alert('Email or password is incorrect!'); // Show error message from server
+        alert('Email or password is incorrect!');
       }
     } catch (error) {
       alert('An error occurred: ' + error.message);
     }
   };
 
-
   return (
-    <div className="SignIn">
-      <h2>Sign In</h2>
-      <div className='form-container'>
-      <form onSubmit={handleSubmit}>
-        <div className='form-group'>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={credentials.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className='form-group'>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={credentials.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">Sign In</button>
-
-        <p>Don't have an account? <Link to="/signup">Sign Up Here</Link></p>
-      </form>
+    <div className="auth-container">
+      <div className="form-box">
+        <h2>Sign In</h2>
+        <form onSubmit={handleSubmit}>
+          <div className='form-group'>
+            <label htmlFor="email">Email:</label>
+            <input type="email" name="email" value={credentials.email} onChange={handleChange} required />
+          </div>
+          <div className='form-group'>
+            <label htmlFor="password">Password:</label>
+            <input type="password" name="password" value={credentials.password} onChange={handleChange} required />
+          </div>
+          <button type="submit">Sign In</button>
+          <p>Don't have an account? <Link to="/signup">Sign Up Here</Link></p>
+        </form>
       </div>
     </div>
   );
 }
-
-//<p>Forgot password? <Link to="/forgot-password">Reset Password</Link></p>
 
 export default SignIn;

@@ -21,7 +21,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: black;
 }
 
 .App-link {
@@ -113,7 +113,7 @@
 }
 
 .banner {
-  background-color: #27228d;
+  background-color: #041433;
   color: #fff;
   padding: 10px 20px;
   text-align: center;

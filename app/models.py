@@ -140,45 +140,46 @@ def evaluate_loan_eligibility(data):
 
     response = {"status": "Approved" if prediction[0] == 1 else "Rejected"}
     
-    if prediction[0] == 0:  # If the application is rejected
+    if prediction[0] == 0:  # If rejected
         reasons = []
-
-        # Income-Loan Ratio Check
         total_income = float(data['applicantIncome']) + float(data['coapplicantIncome'])
         loan_amount = float(data['loanAmount'])
-        if total_income > 0:
-            income_loan_ratio = loan_amount / total_income
-            if income_loan_ratio > 0.6:  # threshold ratio
-                reasons.append(f"The income to loan amount ratio is too high ({income_loan_ratio:.2f}). Consider reducing the loan amount or increasing income.")
-
-        # Loan Term
         loan_term = int(data['loanTerm'])
-        if loan_term > 360:
-            reasons.append("The requested loan term is too long. Shortening the loan term may increase approval chances.")
+        credit_history = data['creditHistory']
+        property_area = data['propertyArea']
+        marital_status = data['married']
+        self_employed = data['selfEmployed']
+
+        # Income-Loan Ratio Check
+        if total_income > 0 and loan_amount / total_income > 0.6:
+            reasons.append("The income to loan amount ratio is high, indicating potential repayment issues.")
+
+        # Loan Term Check
+        if loan_term > 360:  # Example threshold for a 30-year term
+            reasons.append("The loan term exceeds typical maximums, posing a risk of prolonged debt.")
 
         # Credit History Evaluation
-        if data['creditHistory'] == '0':
-            reasons.append("Improving credit history is crucial for loan approval. Consider checking your credit report for potential improvements.")
+        if credit_history == '0':
+            reasons.append("A poor credit history significantly reduces loan approval chances.")
 
-        # Self-Employed and Income Stability
-        if data['selfEmployed'] == 'Yes' and total_income < 5000: 
-            reasons.append("For self-employed applicants, demonstrating a higher and stable income may improve loan eligibility.")
+        # Self-Employment Check
+        if self_employed == 'Yes' and total_income < 5000:
+            reasons.append("For self-employed applicants, a higher income is often required to offset perceived risk.")
 
         # Marital Status Check
-        if data['married'] == 'No' and feature_importances['Married'] > 0.04:
-            reasons.append("Marital status can impact loan approval. Married applicants may sometimes be viewed as having a more stable financial situation.")
-        
+        if marital_status == 'No':
+            reasons.append("Married applicants may sometimes be viewed as having a more stable financial situation.")
+
         # Property Area Influence
         property_area_feedback = {
-            'Urban': "Urban areas may have stricter evaluation criteria due to higher property values.",
-            'Rural': "Rural areas might see lower approval rates due to perceived market stability concerns.",
-            'Semiurban': "Properties in semi-urban areas generally have better approval rates. Review other aspects of your application if rejected."
+            'Urban': "Loan applications for urban areas may face stricter scrutiny due to higher living costs.",
+            'Rural': "Rural area properties might have variable approval rates depending on local market conditions.",
         }
-        reasons.append(property_area_feedback.get(data['propertyArea'], "Property area influence is unclear."))
+        if data['propertyArea'] in property_area_feedback:
+            reasons.append(property_area_feedback[data['propertyArea']])
 
-        # Default message if no specific reasons identified
         if not reasons:
-            reasons.append("There were no clear factors leading to rejection. Reviewing the application details for accuracy and completeness may help.")
+            reasons.append("The reasons for rejection are not clear. Enhancing the application's overall strength may improve approval chances.")
 
         response["reasons"] = reasons
 
