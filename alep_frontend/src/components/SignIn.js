@@ -1,7 +1,7 @@
 // SignIn.js
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './loginStyles.css'; // Make sure the path matches where your styles.css is located
+import './loginStyles.css';
 
 function SignIn({ setIsAuthenticated }) {
   const [credentials, setCredentials] = useState({ email: '', password: '' });

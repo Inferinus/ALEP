@@ -14,11 +14,11 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 700px; /* Adjust based on your design needs */
+    max-width: 700px;
   }
   
   .application-card {
-    flex: 0 0 90%; /* Flex-basis at 90% of the container width */
+    flex: 0 0 90%; 
     padding: 20px;
     margin: 10px;
     border: 1px solid #ccc;
