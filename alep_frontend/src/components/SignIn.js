@@ -72,6 +72,5 @@ function SignIn({ setIsAuthenticated }) { // Destructure setIsAuthenticated from
   );
 }
 
-//<p>Forgot password? <Link to="/forgot-password">Reset Password</Link></p>
 
 export default SignIn;

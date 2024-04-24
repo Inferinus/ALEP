@@ -8,7 +8,6 @@ import LoanApplicationForm from './components/LoanApplicationForm';
 import Settings from './components/Settings';
 import Navbar from './components/Navbar';
 import LoanApplications from './components/LoanApplications';
-import ForgotPassword from './components/ForgotPassword';
 import './App.css';
 
 function App() {
@@ -38,7 +37,6 @@ function App() {
           <Route path="/" element={<Navigate replace to="/dashboard" />} />
           {/* Pass setIsAuthenticated down to SignIn so it can update the app state upon successful login */}
           <Route path="/signin" element={<SignIn setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path='/forgot-password' element={<ForgotPassword />}/>
           <Route path="/signup" element={<SignUp />} />
           {/* Conditionally render routes based on authentication status */}
           {isAuthenticated ? (

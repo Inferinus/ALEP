@@ -1,6 +1,5 @@
 // Settings.js
 import React, { useState, useEffect } from 'react';
-//import {useNavigate} from 'react-router-dom';
 
 function Settings({ setIsAuthenticated }) {
   const [userData, setUserData] = useState({
@@ -114,79 +113,90 @@ function Settings({ setIsAuthenticated }) {
       }
     };
 
-    //const navigate = useNavigate();
+
 
   return (
     <div className="Settings">
         <h2>Settings</h2>
         {!isEditingInfo && !isChangingPassword && (
             <>
-                <div>
-                    <p>First Name: {userData.firstname}</p>
-                    <p>Last Name: {userData.lastname}</p>
-                    <p>Username: {userData.username}</p>
-                    <p>Email: {userData.email}</p>
-                    <button onClick={() => setIsEditingInfo(true)}>Edit Info</button>
-                    <button onClick={() => setIsChangingPassword(true)}>Change Password</button>
+                <div className='settings-form-container'>
+                    <div>
+                        <p>First Name: {userData.firstname}</p>
+                        <p>Last Name: {userData.lastname}</p>
+                        <p>Username: {userData.username}</p>
+                        <p>Email: {userData.email}</p>
+                        <div>
+                            <button onClick={() => setIsEditingInfo(true)}>Edit Info</button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button onClick={() => setIsChangingPassword(true)}>Change Password</button>
+                        </div>
+                    </div>
+                    <div>
+                        <button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => setIsDeletingAccount(true)}>
+                            Delete Account
+                        </button>
+                    </div>
                 </div>
-                <button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => setIsDeletingAccount(true)}>
-                  Delete Account
-                </button>
             </>
         )}
         {isEditingInfo && (
-    <div className='form-container'>
+    <div className='settings-form-container'>
     <form onSubmit={handleEditInfoSubmit}>
-      <div className='form-group'>
-        <label htmlFor="firstname">First Name:</label>
-        <input
-          type="text"
-          name="firstname"
-          value={userData.firstname}
-          onChange={handleUserDataChange}
-          required
-        />
-      </div>
-      <div className='form-group'>
-        <label htmlFor="lastname">Last Name:</label>
-        <input
-          type="text"
-          name="lastname"
-          value={userData.lastname}
-          onChange={handleUserDataChange}
-          required
-        />
-      </div>
-      <div className='form-group'>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          name="username"
-          value={userData.username}
-          onChange={handleUserDataChange}
-          required
-        />
-      </div>
-      <div className='form-group'>
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          name="email"
-          value={userData.email}
-          onChange={handleUserDataChange}
-          required
-        />
-      </div>
-      <button type="submit">Update Profile</button>
-      <button type="button" onClick={() => setIsEditingInfo(false)}>Cancel</button>
+        <div>
+            <div className='settings-form-group'>
+                <label htmlFor="firstname">First Name:</label>
+                <input
+                    type="text"
+                    name="firstname"
+                    value={userData.firstname}
+                    onChange={handleUserDataChange}
+                    required
+                />
+            </div>
+            <div className='settings-form-group'>
+                <label htmlFor="lastname">Last Name:</label>
+                <input
+                    type="text"
+                    name="lastname"
+                    value={userData.lastname}
+                    onChange={handleUserDataChange}
+                    required
+                />
+            </div>
+            <div className='settings-form-group'>
+                <label htmlFor="username">Username:</label>
+                <input
+                    type="text"
+                    name="username"
+                    value={userData.username}
+                    onChange={handleUserDataChange}
+                    required
+                />
+            </div>
+            <div className='settings-form-group'>
+                <label htmlFor="email">Email:</label>
+                <input
+                    type="email"
+                    name="email"
+                    value={userData.email}
+                    onChange={handleUserDataChange}
+                    required
+                    style = {{marginLeft: '33px'}}
+                />
+            </div>
+            <button type="submit">Update Profile</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="button" onClick={() => setIsEditingInfo(false)}>Cancel</button>
+            </div>
     </form>
     </div>
 )}
 
 {isChangingPassword && (
-    <div className='form-container'>
+    <div className='settings-form-container'>
     <form onSubmit={handleChangePasswordSubmit}>
-        <div className='form-group'>
+        <div className='settings-form-group'>
             <label>Current Password:</label>
             <input
                 type="password"
@@ -196,7 +206,7 @@ function Settings({ setIsAuthenticated }) {
                 required
             />
         </div>
-        <div className='form-group'>
+        <div className='settings-form-group'>
             <label>New Password:</label>
             <input
                 type="password"
@@ -206,7 +216,7 @@ function Settings({ setIsAuthenticated }) {
                 required
             />
         </div>
-        <div className='form-group'>
+        <div className='settings-form-group'>
             <label>Confirm New Password:</label>
             <input
                 type="password"
@@ -217,15 +227,17 @@ function Settings({ setIsAuthenticated }) {
             />
         </div>
         <button type="submit">Change Password</button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button type="button" onClick={() => setIsChangingPassword(false)}>Cancel</button>
     </form>
     </div>
 )}
 
         {isDeletingAccount && (
-            <div>
+            <div className='settings-form-container-delete'>
                 <p>Are you sure you want to delete your account?</p>
                 <button onClick={handleDeleteAccount}>Yes</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <button onClick={() => setIsDeletingAccount(false)}>No</button>
             </div>
         )}
