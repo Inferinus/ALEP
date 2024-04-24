@@ -1,0 +1,61 @@
+/* LoanApplications.css */
+
+/* Container adjustments for swipeable views and buttons */
+.LoanApplications {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  /* Flex container for swipe views and side buttons */
+  .swipe-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 700px;
+  }
+  
+  .application-card {
+    flex: 0 0 90%; 
+    padding: 20px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .reason-popup {
+    position: absolute;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+
+  button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    min-width: 50px; /* Ensure the button has a readable size */
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+  }
+
+
+  

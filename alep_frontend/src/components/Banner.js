@@ -1,9 +1,10 @@
 import React from 'react';
+import logo from './logo.jpg';
 
-const Banner = ({appName}) => {
+const Banner = ({ appName }) => {
     return (
         <div className='banner'>
-            <h1>ALEP</h1>
+            <img src={logo} alt={`${appName} Logo`} style={{ width: '35%', height: 'auto' }} />
         </div>
     );
 };

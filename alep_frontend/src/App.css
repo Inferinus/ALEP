@@ -1,6 +1,11 @@
 .App {
   text-align: center;
+  background-color: rgb(226, 226, 226);
+  min-height: 100vh;
+  width: 100%;
+
 }
+
 
 .App-logo {
   height: 40vmin;
@@ -21,7 +26,7 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: black;
 }
 
 .App-link {
@@ -38,7 +43,7 @@
 }
 
 .navbar {
-  background-color: #3c35c5;
+  background-color: #3eb9af;
   padding: 20px;
 }
 
@@ -74,7 +79,7 @@
 .button {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #1278b8;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -113,7 +118,7 @@
 }
 
 .banner {
-  background-color: #27228d;
+  background-color: #041433;
   color: #fff;
   padding: 10px 20px;
   text-align: center;

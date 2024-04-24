@@ -1,0 +1,99 @@
+/* Dashboard.css */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .right-column {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .latest-application, .no-application {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+  
+  .application-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .button {
+    background-color: 007bff; /* Same as navbar */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+  }
+  
+  .reason-button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .reason-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    z-index: 100;
+  }
+  
+  .LoanApprovalGraphs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+  }
+  
+  .LoanApprovalGraphs > div {
+    width: 100%;
+    height: 100%;
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .credit-tips {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-top: 30px; 
+  }
+  
+  .credit-tips ul {
+    list-style: none; /* Removes bullet points */
+    padding: 0;
+  }
+  
+  .credit-tips li {
+    margin-bottom: 15px;
+    font-size: 17px;
+  }
+  

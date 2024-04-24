@@ -1,6 +1,7 @@
 // SignUp.js
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import './loginStyles.css'; // Make sure the path matches where your styles.css is located
 
 function SignUp() {
   const [userData, setUserData] = useState({
@@ -26,7 +27,7 @@ function SignUp() {
       });
       if (response.ok) {
         alert('Registration successful. Please sign in.');
-        navigate('/signin'); // Redirect to sign-in page
+        navigate('/signin');
       } else {
         alert('Registration failed. Please try again.');
       }
@@ -36,66 +37,36 @@ function SignUp() {
   };
 
   return (
-    <div className="SignUp">
-      <h2>Sign Up</h2>
-      <div className='form-container'>
+    <div className="auth-container">
+      <div className="form-box">
+        <h2>Sign Up</h2>
         <form onSubmit={handleSubmit}>
           <div className='form-group'>
-            <label htmlFor="firstname">First Name: </label>
-            <input
-              type="text"
-              name="firstname"
-              value={userData.firstname}
-              onChange={handleChange}
-              required
-            />
+            <label htmlFor="firstname">First Name:</label>
+            <input type="text" name="firstname" value={userData.firstname} onChange={handleChange} required />
           </div>
           <div className='form-group'>
-            <label htmlFor="lastname">Last Name: </label>
-            <input
-              type="text"
-              name="lastname"
-              value={userData.lastname}
-              onChange={handleChange}
-              required
-            />
+            <label htmlFor="lastname">Last Name:</label>
+            <input type="text" name="lastname" value={userData.lastname} onChange={handleChange} required />
           </div>
           <div className='form-group'>
-            <label htmlFor="email">Email: </label>
-            <input
-              type="email"
-              name="email"
-              value={userData.email}
-              onChange={handleChange}
-              required
-            />
+            <label htmlFor="email">Email:</label>
+            <input type="email" name="email" value={userData.email} onChange={handleChange} required />
           </div>
           <div className='form-group'>
-            <label htmlFor="username">Username: </label>
-            <input
-              type="text"
-              name="username"
-              value={userData.username}
-              onChange={handleChange}
-              required
-            />
+            <label htmlFor="username">Username:</label>
+            <input type="text" name="username" value={userData.username} onChange={handleChange} required />
           </div>
           <div className='form-group'>
-            <label htmlFor="password">Password: </label>
-            <input
-              type="password"
-              name="password"
-              value={userData.password}
-              onChange={handleChange}
-              required
-            />
+            <label htmlFor="password">Password:</label>
+            <input type="password" name="password" value={userData.password} onChange={handleChange} required />
           </div>
           <button type="submit">Sign Up</button>
           <p>Already have an account? <Link to="/signin">Sign In Here</Link></p>
         </form>
-        </div>
+      </div>
     </div>
-  ); 
+  );
 }
 
 export default SignUp;
