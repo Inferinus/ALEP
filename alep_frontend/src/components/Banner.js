@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.jpg'; // Ensure the path to the logo is correct
+import logo from './logo.jpg';
 
 const Banner = ({ appName }) => {
     return (
