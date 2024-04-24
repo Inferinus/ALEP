@@ -34,7 +34,7 @@
   }
   
   .button {
-    background-color: #3c35c5; /* Same as navbar */
+    background-color: 007bff; /* Same as navbar */
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -77,5 +77,23 @@
   h2 {
     text-align: center;
     margin-bottom: 20px;
+  }
+  
+  .credit-tips {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-top: 30px; 
+  }
+  
+  .credit-tips ul {
+    list-style: none; /* Removes bullet points */
+    padding: 0;
+  }
+  
+  .credit-tips li {
+    margin-bottom: 15px;
+    font-size: 17px;
   }
   

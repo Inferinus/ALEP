@@ -24,7 +24,7 @@ function Dashboard() {
         if (!appData.error) {
           setLatestApplication(appData);
         } else {
-          setLatestApplication(null);  // Ensure null is set if no application is found
+          setLatestApplication(null);
         }
       };
       fetchLatestApplication();
@@ -36,7 +36,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="Dashboard">
+    <div className={`Dashboard ${showReason ? 'dim' : ''}`}>
       <h2>Welcome to Your ALEP Dashboard, {userName}!</h2>
       <div className="dashboard-grid">
         <div className="left-column">
@@ -48,7 +48,7 @@ function Dashboard() {
               <p>Status: {latestApplication.status}</p>
               <p>Decision Date: {latestApplication.decision_date}</p>
               {latestApplication.status === "Rejected" && (
-                <button onClick={toggleReason}>Reason</button>
+                <button className="reason-button" onClick={toggleReason}>Reason</button>
               )}
               {showReason && (
                 <div className="reason-popup">
@@ -66,6 +66,15 @@ function Dashboard() {
             <Link to="/apply" className='button'>Apply for a New Loan</Link>
             <span className='button-space'></span>
             <Link to="/loan-applications" className='button'>View Your Loan Applications</Link>
+          </div>
+          <div className="credit-tips">
+            <h3>Tips to Improve Credit:</h3>
+            <ul>
+              <li>✓ Pay your bills on time</li>
+              <li>✓ Keep your balances low</li>
+              <li>✓ Don’t close old accounts</li>
+              <li>✓ Have a mix of loans</li>
+            </ul>
           </div>
         </div>
         <div className="right-column">
