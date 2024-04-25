@@ -126,7 +126,7 @@ function Settings({ setIsAuthenticated }) {
                         <p>Last Name: {userData.lastname}</p>
                         <p>Username: {userData.username}</p>
                         <p>Email: {userData.email}</p>
-                        <div>
+                        <div style={{padding: '10px'}}>
                             <button onClick={() => setIsEditingInfo(true)}>Edit Info</button>
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <button onClick={() => setIsChangingPassword(true)}>Change Password</button>
@@ -145,7 +145,7 @@ function Settings({ setIsAuthenticated }) {
     <form onSubmit={handleEditInfoSubmit}>
         <div>
             <div className='settings-form-group'>
-                <label htmlFor="firstname">First Name:</label>
+                <label htmlFor="firstname">First Name: </label>
                 <input
                     type="text"
                     name="firstname"
@@ -155,7 +155,7 @@ function Settings({ setIsAuthenticated }) {
                 />
             </div>
             <div className='settings-form-group'>
-                <label htmlFor="lastname">Last Name:</label>
+                <label htmlFor="lastname">Last Name: </label>
                 <input
                     type="text"
                     name="lastname"
@@ -165,7 +165,7 @@ function Settings({ setIsAuthenticated }) {
                 />
             </div>
             <div className='settings-form-group'>
-                <label htmlFor="username">Username:</label>
+                <label htmlFor="username">Username: </label>
                 <input
                     type="text"
                     name="username"
@@ -175,7 +175,7 @@ function Settings({ setIsAuthenticated }) {
                 />
             </div>
             <div className='settings-form-group'>
-                <label htmlFor="email">Email:</label>
+                <label htmlFor="email">Email: </label>
                 <input
                     type="email"
                     name="email"
@@ -194,10 +194,10 @@ function Settings({ setIsAuthenticated }) {
 )}
 
 {isChangingPassword && (
-    <div className='settings-form-container'>
+    <div className='settings-form-container' >
     <form onSubmit={handleChangePasswordSubmit}>
         <div className='settings-form-group'>
-            <label>Current Password:</label>
+            <label>Current Password: </label>
             <input
                 type="password"
                 name="currentPassword"
@@ -207,7 +207,7 @@ function Settings({ setIsAuthenticated }) {
             />
         </div>
         <div className='settings-form-group'>
-            <label>New Password:</label>
+            <label>New Password: </label>
             <input
                 type="password"
                 name="newPassword"
@@ -217,7 +217,7 @@ function Settings({ setIsAuthenticated }) {
             />
         </div>
         <div className='settings-form-group'>
-            <label>Confirm New Password:</label>
+            <label>Confirm New Password: </label>
             <input
                 type="password"
                 name="confirmPassword"

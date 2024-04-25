@@ -95,8 +95,10 @@
   margin-right: 20px;
 }
 
-.SignUp {
-  text-align: center;
+.LoanApplicationForm {
+  background-color: #e6e3e3;
+  height: 100vh;
+
 }
 
 .form-container {
@@ -131,4 +133,41 @@
 
 .income-input span {
   font-weight: bold;
+}
+
+.Settings {
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+.settings-form-container {
+  background-color: #f6f3f3;
+  max-width: 400px;
+  height: auto;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  padding: 10px;
+  padding-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 10px 10px 4px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.settings-form-group {
+  margin-bottom: 15px;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.settings-form-container-delete {
+  background-color: #ffffff;
+  max-width: 400px;
+  min-height: 100px;
+  margin: 0 auto;
+  margin-bottom: 100px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 10px 10px 4px rgba(0, 0, 0, 0.3);
 }
