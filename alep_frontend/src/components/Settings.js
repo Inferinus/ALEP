@@ -194,7 +194,7 @@ function Settings({ setIsAuthenticated }) {
 )}
 
 {isChangingPassword && (
-    <div className='settings-form-container' >
+    <div className='settings-form-container'>
     <form onSubmit={handleChangePasswordSubmit}>
         <div className='settings-form-group'>
             <label>Current Password: </label>
