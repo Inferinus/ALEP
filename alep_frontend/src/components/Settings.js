@@ -172,6 +172,7 @@ function Settings({ setIsAuthenticated }) {
                     value={userData.username}
                     onChange={handleUserDataChange}
                     required
+                    style = {{marginLeft: '5px'}}
                 />
             </div>
             <div className='settings-form-group'>
@@ -182,7 +183,7 @@ function Settings({ setIsAuthenticated }) {
                     value={userData.email}
                     onChange={handleUserDataChange}
                     required
-                    style = {{marginLeft: '33px'}}
+                    style = {{marginLeft: '35px'}}
                 />
             </div>
             <button type="submit">Update Profile</button>
