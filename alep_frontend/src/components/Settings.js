@@ -204,6 +204,7 @@ function Settings({ setIsAuthenticated }) {
                 value={passwordData.currentPassword}
                 onChange={handlePasswordDataChange}
                 required
+                style = {{marginLeft: '38px'}}
             />
         </div>
         <div className='settings-form-group'>
@@ -214,6 +215,7 @@ function Settings({ setIsAuthenticated }) {
                 value={passwordData.newPassword}
                 onChange={handlePasswordDataChange}
                 required
+                style = {{marginLeft: '60px'}}
             />
         </div>
         <div className='settings-form-group'>
