@@ -43,6 +43,7 @@ class LoanApplication(db.Model):
     loan_term = db.Column(db.Integer, nullable=False)
     credit_history = db.Column(db.Integer, nullable=False)
     property_area = db.Column(db.String(20), nullable=False)
+    purpose = db.Column(db.String(250), nullable=False)
 
 
 class LoanDecision(db.Model):
@@ -152,11 +153,11 @@ def evaluate_loan_eligibility(data):
 
         # Income-Loan Ratio Check
         if total_income > 0 and loan_amount / total_income > 0.6:
-            reasons.append("The income to loan amount ratio is high, indicating potential repayment issues.")
+            reasons.append("The income to loan amount ratio is high indicating potential repayment issues.")
 
         # Loan Term Check
         if loan_term > 360:  # Example threshold for a 30-year term
-            reasons.append("The loan term exceeds typical maximums, posing a risk of prolonged debt.")
+            reasons.append("The loan term exceeds typical maximums posing a risk of prolonged debt.")
 
         # Credit History Evaluation
         if credit_history == '0':
@@ -164,7 +165,7 @@ def evaluate_loan_eligibility(data):
 
         # Self-Employment Check
         if self_employed == 'Yes' and total_income < 5000:
-            reasons.append("For self-employed applicants, a higher income is often required to offset perceived risk.")
+            reasons.append("For self-employed applicants a higher income is often required to offset perceived risk.")
 
         # Marital Status Check
         if marital_status == 'No':

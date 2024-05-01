@@ -37,7 +37,7 @@ function LoanApplicationForm() {
     try {
       const payload = {
         ...formState,
-        user_id: userId, // Include the user ID in the payload
+        user_id: userId, 
       };
       const response = await fetch('/api/predict_loan_eligibility', {
         method: 'POST',
@@ -76,15 +76,11 @@ function LoanApplicationForm() {
           </select>
         </div>
         <div className='form-group'>
-          <label htmlFor="dependents">Dependents:</label>
-          <input type="number" name="dependents" value={formState.dependents} onChange={handleChange} required />
-        </div>
-        <div className='form-group'>
-          <label htmlFor="education">Education:</label>
-          <select name="education" value={formState.education} onChange={handleChange} required>
+          <label htmlFor="creditHistory">Credit History:</label>
+          <select name="creditHistory" value={formState.creditHistory} onChange={handleChange} required>
             <option value="">Select</option>
-            <option value="Graduate">Graduate</option>
-            <option value="Not Graduate">Not Graduate</option>
+            <option value="1">Good</option>
+            <option value="0">Bad</option>
           </select>
         </div>
         <div className='form-group'>
@@ -93,6 +89,23 @@ function LoanApplicationForm() {
             <option value="">Select</option>
             <option value="Yes">Yes</option>
             <option value="No">No</option>
+          </select>
+        </div>
+        <div className='form-group'>
+          <label htmlFor="propertyArea">Property Area:</label>
+          <select name="propertyArea" value={formState.propertyArea} onChange={handleChange} required>
+            <option value="">Select</option>
+            <option value="Urban">Urban</option>
+            <option value="Rural">Rural</option>
+            <option value="Semiurban">Semiurban</option>
+          </select>
+        </div>
+        <div className='form-group'>
+          <label htmlFor="education">Education:</label>
+          <select name="education" value={formState.education} onChange={handleChange} required>
+            <option value="">Select</option>
+            <option value="Graduate">Graduate</option>
+            <option value="Not Graduate">Not Graduate</option>
           </select>
         </div>
         <div className='form-group'>
@@ -121,21 +134,12 @@ function LoanApplicationForm() {
           <input type="number" name="loanTerm" value={formState.loanTerm} onChange={handleChange} required />
         </div>
         <div className='form-group'>
-          <label htmlFor="creditHistory">Credit History:</label>
-          <select name="creditHistory" value={formState.creditHistory} onChange={handleChange} required>
-            <option value="">Select</option>
-            <option value="1">Good</option>
-            <option value="0">Bad</option>
-          </select>
+          <label htmlFor="purpose">Purpose of Loan:</label>
+          <input type="text" name="purpose" value={formState.purpose} onChange={handleChange} required />
         </div>
         <div className='form-group'>
-          <label htmlFor="propertyArea">Property Area:</label>
-          <select name="propertyArea" value={formState.propertyArea} onChange={handleChange} required>
-            <option value="">Select</option>
-            <option value="Urban">Urban</option>
-            <option value="Rural">Rural</option>
-            <option value="Semiurban">Semiurban</option>
-          </select>
+          <label htmlFor="dependents">Dependents:</label>
+          <input type="number" name="dependents" value={formState.dependents} onChange={handleChange} required />
         </div>
         <button type="submit">Submit</button>
       </form>

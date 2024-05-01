@@ -53,4 +53,4 @@ function SignIn({ setIsAuthenticated }) {
   );
 }
 
-export default SignIn;
+export default SignIn

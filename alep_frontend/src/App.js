@@ -38,6 +38,7 @@ function App() {
           {/* Pass setIsAuthenticated down to SignIn so it can update the app state upon successful login */}
           <Route path="/signin" element={<SignIn setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/signup" element={<SignUp />} />
+
           {/* Conditionally render routes based on authentication status */}
           {isAuthenticated ? (
             <>

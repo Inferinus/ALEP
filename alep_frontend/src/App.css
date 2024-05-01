@@ -3,9 +3,7 @@
   background-color: rgb(226, 226, 226);
   min-height: 100vh;
   width: 100%;
-
 }
-
 
 .App-logo {
   height: 40vmin;
@@ -98,25 +96,39 @@
 .LoanApplicationForm {
   background-color: #e6e3e3;
   height: 100vh;
+}
 
+.LoanApplicationForm .form-group,
+.LoanApplicationForm .income-input {
+  display: flex;
+  align-items: center;
+  width: 100%; 
+}
+
+.LoanApplicationForm .form-group label,
+.LoanApplicationForm .income-input label {
+  width: 180px; 
+  margin-right: 20px; 
+}
+
+.LoanApplicationForm .form-group select,
+.LoanApplicationForm .income-input input {
+  flex-grow: 1; 
+  padding: 8px;
+  box-sizing: border-box; 
 }
 
 .form-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 200px;
+  width: 80%; 
+  margin: auto; 
 }
 
-.form-group {
+.App .form-group {
+  width: 100%; 
   margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-}
-
-.form-group label {
-  width: 200px;
-  margin-right: 10px;
 }
 
 .banner {
@@ -127,12 +139,14 @@
 }
 
 .income-input {
+  width: 100%; 
   display: flex;
   align-items: center;
 }
 
 .income-input span {
   font-weight: bold;
+  margin-right: 10px; 
 }
 
 .Settings {

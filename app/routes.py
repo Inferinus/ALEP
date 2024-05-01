@@ -11,10 +11,16 @@ import pytz
 @app.route('/api/signup', methods=['POST'])
 def signup():
     data = request.get_json()
+    password = data['password']
+
+    # Check password requirements
+    if len(password) < 6 or not any(char.isupper() for char in password) or not any(char.isdigit() for char in password):
+        return jsonify({"error": "Password does not meet the requirements"}), 400
+
     existing_user = User.query.filter_by(email=data['email']).first()
     if existing_user is None:
         user = User(firstname=data['firstname'], lastname=data['lastname'], username=data['username'], email=data['email'])
-        user.set_password(data['password'])
+        user.set_password(password)
         db.session.add(user)
         db.session.commit()
         return jsonify({"message": "User successfully registered."}), 201
@@ -72,16 +78,17 @@ def predict_loan_eligibility():
             loan_term=input_data['loanTerm'],
             credit_history=input_data['creditHistory'],
             property_area=input_data['propertyArea'],
+            purpose=input_data.get('purpose', '')
         )
         db.session.add(new_application)
         db.session.flush()  # This is to get the application id before committing
         
         # Save loan decision
         new_decision = LoanDecision(
-        application_id=new_application.id,
-        answer=result['status'],
-        reason=', '.join(result.get('reasons', [])),
-        decision_date=datetime.now(pytz.utc).astimezone(pytz.timezone('US/Eastern'))
+            application_id=new_application.id,
+            answer=result['status'],
+            reason=', '.join(result.get('reasons', [])),
+            decision_date=datetime.now(pytz.utc).astimezone(pytz.timezone('US/Eastern'))
         )
 
         db.session.add(new_decision)
@@ -101,13 +108,18 @@ def user_loan_applications(user_id):
     for application in applications:
         # Retrieve the decision for each application
         decision = LoanDecision.query.filter_by(application_id=application.id).first()
+        if decision:
+            formatted_date = decision.decision_date.strftime('%m/%d/%Y @ %I:%M %p')
+        else:
+            formatted_date = None
         applications_data.append({
             "application_id": application.id,
+            "purpose": application.purpose,
             "loan_amount": application.loan_amount,
             "loan_term": application.loan_term,
             "status": decision.answer if decision else 'Pending',
             "reason": decision.reason if decision else None,
-            "decision_date": decision.decision_date.astimezone(pytz.timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M:%S') if decision else None,
+            "decision_date": formatted_date
         })
     return jsonify(applications_data)
 
@@ -117,12 +129,14 @@ def latest_loan_application(user_id):
     if application:
         decision = LoanDecision.query.filter_by(application_id=application.id).first()
         if decision:
+            formatted_date = decision.decision_date.astimezone(pytz.timezone('US/Eastern')).strftime('%m/%d/%Y @ %I:%M %p')
             return jsonify({
                 "application_id": application.id,
                 "loan_amount": application.loan_amount,
                 "status": decision.answer,
-                "reason": decision.reason,  # Make sure this is being sent
-                "decision_date": decision.decision_date.astimezone(pytz.timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M:%S')
+                "reason": decision.reason,
+                "purpose": application.purpose,
+                "decision_date": formatted_date
             }), 200
         else:
             return jsonify({"error": "Decision not found for the latest application"}), 404

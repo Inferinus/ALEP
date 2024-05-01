@@ -1,7 +1,7 @@
 // SignUp.js
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './loginStyles.css'; // Make sure the path matches where your styles.css is located
+import './loginStyles.css';
 
 function SignUp() {
   const [userData, setUserData] = useState({
@@ -11,14 +11,32 @@ function SignUp() {
     username: '',
     password: '',
   });
+  const [passwordStrength, setPasswordStrength] = useState(0);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setUserData({ ...userData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+  
+    if (name === 'password') {
+      let strength = 0;
+      if (value.length >= 6) strength++;
+      if (/[A-Z]/.test(value)) strength++;
+      if (/\d/.test(value)) strength++;
+      setPasswordStrength(strength);
+      console.log("Password strength:", strength);
+    }
   };
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (passwordStrength < 3) {
+      alert("Password does not satisfy all 3 requirements. Please make sure your password is at least 6 characters long, includes an uppercase letter, and includes a number.");
+      return;
+    }
+  
     try {
       const response = await fetch('/api/signup', {
         method: 'POST',
@@ -35,6 +53,7 @@ function SignUp() {
       alert('An error occurred: ' + error.message);
     }
   };
+  
 
   return (
     <div className="auth-container">
@@ -61,6 +80,20 @@ function SignUp() {
             <label htmlFor="password">Password:</label>
             <input type="password" name="password" value={userData.password} onChange={handleChange} required />
           </div>
+          <div className='form-group'>
+            <div className="password-strength-bar">
+                <div className={`strength strength-${passwordStrength}`}></div>
+            </div>
+          </div>
+          <div className="password-requirements">
+              Password must:
+              <ul>
+                <li>Be at least 6 characters long</li>
+                <li>Include at least one uppercase letter</li>
+                <li>Include at least one number</li>
+              </ul>
+          </div>
+          
           <button type="submit">Sign Up</button>
           <p>Already have an account? <Link to="/signin">Sign In Here</Link></p>
         </form>

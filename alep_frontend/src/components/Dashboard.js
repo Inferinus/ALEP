@@ -42,17 +42,22 @@ function Dashboard() {
         <div className="left-column">
           {latestApplication ? (
             <div className="latest-application">
-              <h3>Latest Application:</h3>
-              <p>Application ID: {latestApplication.application_id}</p>
-              <p>Loan Amount: {latestApplication.loan_amount}</p>
-              <p>Status: {latestApplication.status}</p>
-              <p>Decision Date: {latestApplication.decision_date}</p>
-              {latestApplication.status === "Rejected" && (
-                <button className="reason-button" onClick={toggleReason}>Reason</button>
-              )}
+            <h3>Latest Application</h3>
+            <p>{latestApplication.purpose}</p>
+            <p className="application-id">#{latestApplication.application_id} • {latestApplication.decision_date}</p>
+            <p className="application-amount">${latestApplication.loan_amount}</p>
+            <div className={`status ${latestApplication.status === 'Approved' ? 'status-approved' : 'status-rejected'}`}>
+              {latestApplication.status}
+            </div>
+            {latestApplication.status === "Rejected" && (
+              <button className="reason-button" onClick={toggleReason}>Reason</button>
+            )}
               {showReason && (
                 <div className="reason-popup">
-                  <p>Reason: {latestApplication.reason}</p>
+                  <h4>Reason for Rejection:</h4>
+                  <ul>
+                    {latestApplication.reason.split(',').map((reason, index) => <li key={index}>{reason}</li>)}
+                  </ul>
                   <button onClick={toggleReason}>Close</button>
                 </div>
               )}
@@ -78,7 +83,6 @@ function Dashboard() {
           </div>
         </div>
         <div className="right-column">
-          <h2>Factors that may affect Approval</h2>
           <LoanApprovalGraphs />
         </div>
       </div>
