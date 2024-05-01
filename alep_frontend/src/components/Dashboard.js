@@ -42,13 +42,13 @@ function Dashboard() {
         <div className="left-column">
           {latestApplication ? (
             <div className="latest-application">
-            <h3>Latest Application</h3>
-            <p>{latestApplication.purpose}</p>
-            <p className="application-id">#{latestApplication.application_id} • {latestApplication.decision_date}</p>
-            <p className="application-amount">${latestApplication.loan_amount}</p>
-            <div className={`status ${latestApplication.status === 'Approved' ? 'status-approved' : 'status-rejected'}`}>
-              {latestApplication.status}
-            </div>
+              <h3>Latest Application</h3>
+              <p>{latestApplication.purpose}</p>
+              <p className="application-id">#{latestApplication.application_id} • {latestApplication.decision_date}</p>
+              <p className="application-amount">${latestApplication.loan_amount}</p>
+              <div className={`status ${latestApplication.status === 'Approved' ? 'status-approved' : 'status-rejected'}`}>
+                {latestApplication.status}
+              </div>
             {latestApplication.status === "Rejected" && (
               <button className="reason-button" onClick={toggleReason}>Reason</button>
             )}
@@ -83,6 +83,7 @@ function Dashboard() {
           </div>
         </div>
         <div className="right-column">
+          <h2>Factors That May Affect Approval</h2>
           <LoanApprovalGraphs />
         </div>
       </div>
