@@ -124,7 +124,7 @@ def evaluate_loan_eligibility(data):
     probabilities = RFclassifier.predict_proba(preprocessed_data)
     
     # Model Threshold
-    new_threshold = 0.63
+    new_threshold = 0.65
     prediction = (probabilities[:, 1] >= new_threshold).astype(int)
 
     # Feature Importances

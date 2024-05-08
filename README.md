@@ -1,45 +1,93 @@
-# ALEP - Automated Loan Eligibility Predictor
+# ALEP: Advanced Loan Eligibility Predictor
 
-Welcome to the ALEP project repository! ALEP is an advanced system designed to predict loan eligibility using machine learning and provide users with instant loan application decisions.
+## Team Information
+- **Awwal Ahmed**
+  - Email: aya3@hood.edu
+  - Title: Project Liaison/Developer
+- **Sarah Freidel**
+  - Email: srf3@hood.edu
+  - Title: Developer
+
+
+## Project Repository URL
+[GitHub - ALEP](https://github.com/Inferinus/ALEP)
+
 
 ## Project Overview
-
-The ALEP project aims to streamline the loan application process by leveraging financial data and sophisticated machine learning algorithms. Users can fill out a loan application form, and the system will provide an instant decision on their eligibility based on predictive modeling.
-
-## Features
-
-- **Machine Learning Model:** Utilizes a powerful machine learning model for accurate loan eligibility predictions.
-- **Web Application:** A user-friendly React.js web interface for submitting loan applications and receiving instant decisions.
-- **Dynamic Dashboard:** Visualizes user financial health, eligibility results, and personalized credit improvement tips.
+ALEP (Advanced Loan Eligibility Predictor) is a sophisticated tool designed to enhance the loan approval process. Utilizing a Random Forest algorithm, ALEP assesses potential borrowers based on factors like income, employment status, and credit history. This automated system predicts the likelihood of applicants fulfilling their loan obligations by analyzing historical data, ensuring decisions are both accurate and fair.
 
 
-## File Structure
+## Repository Directory Structure
+ALEP/
+│
+├── app/ # Backend application with Flask
+│ └── models/ # Contains the Random Forest model and scaler for runtime use
+│
+├── alep_frontend/ # Frontend React application
+│ └── src/ # Source files including React components and styles
+│   └── components/ # React components for UI elements
+│
+├── instance/ # Database instance
+│
+├── migrations/ # Database migrations folder
+│
+└── notebooks/ # Jupyter notebook for data exploration and model training
+  └── data/ # Data files used in the notebook
 
-frontend/: Contains all files related to the React frontend.  
-    src/: Contains the React application source code.  
-        components/:  
-             Dashboard.js: Component displaying the user dashboard, including loan eligibility results.  
-             LoanApplicationForm.js: Component for users to fill out and submit a loan application form.  
-        services/:  
-             loanService.js: Contains functions for API calls to the Flask backend for loan processing.  
-        App.js: The main React application component that includes routing logic.  
-        index.js: Entry point for the React application that renders the App component.  
-    package.json: Node.js package configuration file, listing project dependencies and scripts.  
-    
 
-app/: Contains all files related to the Flask backend.  
-    database/: Contains database-related files, facilitating migrations, scripts, and data management.  
-        migrations/: Directory for database migration scripts (if using a migration tool like Alembic).  
-        scripts/: Directory for database-related scripts, including maintenance or utility scripts.  
-        data/: Directory for storing initial data or backups, useful for database seeding or recovery.  
-        setup.sql: Initial setup script for PostgreSQL, used to create databases and tables.  
-    models/: Contains ML Predictive Models, including pre-trained models and their associated files.  
-    __init__.py: Initializes the Flask application and configures components like the database.  
-    routes.py: Defines URL routes and view functions, mapping endpoints to Python functions.  
-    models.py: Contains SQLAlchemy database models, representing tables and their relationships.  
-    
+## Tech Stack
+- **Frontend**: React.js
+- **Backend**: Flask, SQLite
+- **Data Science**: Python, Pandas, Scikit-Learn
+- **Data Visualization**: Matplotlib, Seaborn
 
-app.py: Script to run the Flask application, initializing and starting the Flask server.  
-config.py: Configuration file for the Flask application.  
-get-pip.py: A Python script used for installing pip, Python's package installer, if it's not already installed.  
-requirements.txt: File listing Python dependencies required for the Flask backend, ensuring consistent environments.  
+
+## Installation & Configuration
+### Prerequisites
+- Python 3.8 or higher
+- Node.js 14.x or higher
+- npm (typically installed with Node.js)
+
+### Virtual Environment Setup
+1. Clone the repository and navigate to the project directory:
+    ```
+    git clone https://github.com/yourgithubusername/ALEP.git
+    cd ALEP
+    ```
+2. Create a virtual environment and activate it:
+    - For macOS/Linux:
+    ```
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
+    - For Windows:
+    ```
+    python -m venv venvwin
+    .\venvwin\Scripts\activate
+    ```
+3. Install python dependencies: 'pip install -r requirements.txt'
+4. Set the FLASK_APP environment variable:
+    - For macOS/Linux:
+    ```
+    export FLASK_APP=run.py
+    ```
+    - For Windows (Command Prompt):
+    ```
+    set FLASK_APP=run.py
+    ```
+
+### Initialize the Database
+1. Initialize the database with Flask-Migrate:
+    ```
+    flask db init
+    flask db migrate -m "Initial migration."
+    flask db upgrade
+    ```
+
+### Start the Backend Server
+Run 'python run.py' in the ALEP directory.
+
+### Setup and Run the Frontend
+1. Navigate to the frontend directory: 'cd alep_frontend'
+2. Install npm packages: 'npm install'
+3. Start the React application: 'npm start'
