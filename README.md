@@ -18,21 +18,17 @@ ALEP (Advanced Loan Eligibility Predictor) is a sophisticated tool designed to e
 
 
 ## Repository Directory Structure
-ALEP/
-│
-├── app/ # Backend application with Flask
-│ └── models/ # Contains the Random Forest model and scaler for runtime use
-│
-├── alep_frontend/ # Frontend React application
-│ └── src/ # Source files including React components and styles
-│   └── components/ # React components for UI elements
-│
-├── instance/ # Database instance
-│
-├── migrations/ # Database migrations folder
-│
-└── notebooks/ # Jupyter notebook for data exploration and model training
-  └── data/ # Data files used in the notebook
+
+- **ALEP/**
+  - **app/** - Backend application with Flask
+    - **models/** - Contains the Random Forest model and scaler for runtime use
+  - **alep_frontend/** - Frontend React application
+    - **src/** - Source files including React components and styles
+      - **components/** - React components for UI elements
+  - **instance/** - Database instance
+  - **migrations/** - Database migrations folder
+  - **notebooks/** - Jupyter notebook for data exploration and model training
+    - **data/** - Data files used in the notebook
 
 
 ## Tech Stack
