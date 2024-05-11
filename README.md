@@ -47,7 +47,7 @@ ALEP (Advanced Loan Eligibility Predictor) is a sophisticated tool designed to e
 ### Virtual Environment Setup
 1. Clone the repository and navigate to the project directory:
     ```
-    git clone https://github.com/yourgithubusername/ALEP.git
+    git clone https://github.com/Inferinus/ALEP.git
     cd ALEP
     ```
 2. Create a virtual environment and activate it:
