@@ -61,7 +61,10 @@ ALEP (Advanced Loan Eligibility Predictor) is a sophisticated tool designed to e
     python -m venv venvwin
     .\venvwin\Scripts\activate
     ```
-3. Install python dependencies: 'pip install -r requirements.txt'
+3. Install python dependencies: 
+  ```
+  pip install -r requirements.txt
+  ```
 4. Set the FLASK_APP environment variable:
     - For macOS/Linux:
     ```
@@ -81,7 +84,7 @@ ALEP (Advanced Loan Eligibility Predictor) is a sophisticated tool designed to e
     ```
 
 ### Start the Backend Server
-Run 'python run.py' in the ALEP directory.
+Run ```python run.py``` in the ALEP directory.
 
 ### Setup and Run the Frontend
 1. Navigate to the frontend directory: 'cd alep_frontend'
